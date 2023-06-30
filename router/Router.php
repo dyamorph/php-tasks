@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 class Router
 {
     private $routes;
 
     public function __construct()
     {
-        $routesPath = ROOT . '/bootstrap/base-paths.php';
+        $routesPath = ROOT . '/routes/web.php';
         $this->routes = include($routesPath);
     }
     private function getURI()
@@ -14,12 +16,17 @@ class Router
             return $_SERVER['REQUEST_URI'];
         }
     }
+    private function getMETHOD()
+    {
+        if (!empty($_SERVER['REQUEST_METHOD'])) {
+            return $_SERVER['REQUEST_METHOD'];
+        }
+    }
     public function run()
     {
         $uri = $this->getURI();
+        $method = $this->getMETHOD();
         if ($uri === '/') {
-            $controllerName = 'AppController';
-            $actionName = 'index';
             $controllerFile = ROOT . '/controllers/AppController.php';
             if (file_exists($controllerFile)) {
                 include_once ($controllerFile);
@@ -27,20 +34,37 @@ class Router
             $appController = new AppController;
             $result = $appController->index();
         }
-        foreach ($this->routes as $uriPattern => $path) {
-            if (preg_match("~$uriPattern~", $uri)) {
-                $segments = explode('/', $path);
-                $controllerName = array_shift($segments) . 'Controller';
-                $controllerName = ucfirst($controllerName);
-                $actionName = array_shift($segments);
-                $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
-                if (file_exists($controllerFile)) {
-                    include_once ($controllerFile);
+        if ($method === "GET") {
+            foreach ($this->routes['GET'] as $uriPattern => $path) {
+                if (preg_match("~$uriPattern~", $uri)) {
+                    $controllerName = ucfirst($path[0]) . 'Controller';
+                    $actionName = $path[1];
+                    $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
+                    if (file_exists($controllerFile)) {
+                        include_once ($controllerFile);
+                    }
+                    $controllerObject = new $controllerName;
+                    $result = $controllerObject->$actionName();
+                    if ($result != null) {
+                        break;
+                    }
                 }
-                $controllerObject = new $controllerName;
-                $result = $controllerObject->$actionName();
-                if ($result != null) {
-                    break;
+            }
+        }
+        if ($method === "POST") {
+            foreach ($this->routes['POST'] as $uriPattern => $path) {
+                if (preg_match("~$uriPattern~", $uri)) {
+                    $controllerName = ucfirst($path[0]) . 'Controller';
+                    $actionName = $path[1];
+                    $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
+                    if (file_exists($controllerFile)) {
+                        include_once ($controllerFile);
+                    }
+                    $controllerObject = new $controllerName;
+                    $result = $controllerObject->$actionName();
+                    if ($result != null) {
+                        break;
+                    }
                 }
             }
         }
