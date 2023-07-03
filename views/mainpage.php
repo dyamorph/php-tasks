@@ -1,0 +1,1 @@
+<a class="btn add-btn" href="/users/new">Добавить пользователя</a>

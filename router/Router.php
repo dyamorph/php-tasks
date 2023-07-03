@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+// use Controllers\AppController;
+
 class Router
 {
     private $routes;
@@ -27,10 +29,6 @@ class Router
         $uri = $this->getURI();
         $method = $this->getMETHOD();
         if ($uri === '/') {
-            $controllerFile = ROOT . '/controllers/AppController.php';
-            if (file_exists($controllerFile)) {
-                include_once ($controllerFile);
-            }
             $appController = new AppController;
             $result = $appController->index();
         }

@@ -1,13 +1,17 @@
 <?php
 declare(strict_types=1);
-class UserController
+
+// namespace Controllers;
+// use \Core\Controller;
+
+class UserController extends Controller
 {
-    public function new() {
-        echo 'user controller action new';
-        return true;
+    public function new()
+    {
+        return $this->view->render('newuser.php', 'template.php');
     }
-    public function create() {
-        echo 'user controller action create';
-        return true;
+    public function create()
+    {
+        
     }
 }

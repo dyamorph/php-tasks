@@ -1,9 +1,13 @@
 <?php
 declare(strict_types=1);
-class AppController
+
+// namespace Controllers;
+// use \Core\Controller;
+
+class AppController extends Controller
 {
-    public function index() {
-        echo 'app controller';
-        return true;
+    public function index()
+    {
+        return $this->view->render('mainpage.php', 'template.php');
     }
 }
