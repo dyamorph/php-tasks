@@ -1,4 +1,4 @@
-<form class="user-form" method="POST">
+<form class="user-form" action="create" method="POST" >
     <h3 class="form-title">Add new user</h3>
     <p class="form-filed">
         <label for="name">Your first and last name</label>

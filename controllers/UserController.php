@@ -12,6 +12,6 @@ class UserController extends Controller
     }
     public function create()
     {
-        
+        return $this->view->render('userinfo.php', 'template.php');
     }
 }

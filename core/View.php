@@ -6,6 +6,9 @@ class View
 {
 	function render(string $content, string $template)
 	{	
-		include 'views/'.$template;
+		$file = 'views/'.$template;
+		if(file_exists($file)) {
+			include $file;
+		}
 	}
 }
