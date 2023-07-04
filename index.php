@@ -1,6 +1,7 @@
 <?php 
 declare(strict_types=1);
 
+// use \Router\Router;
 spl_autoload_register(function(string $class) {
     $path = __DIR__ . "/controllers/{$class}.php";
     if (file_exists($path)) {

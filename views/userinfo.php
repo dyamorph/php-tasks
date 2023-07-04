@@ -1,12 +1,38 @@
 <?php 
-    $name = ''; 
-    $email = '';
-    $gender = '';
-    $status = '';
-    if(isset($_POST['name'])) $name = $_POST['name'];
-    if(isset($_POST['email'])) $email = $_POST['email'];
-    if(isset($_POST['gender'])) $gender = $_POST['gender'];
-    if(isset($_POST['status'])) $status = $_POST['status'];
+    $server = 'localhost';
+    $user = 'root';
+    $pass = 'rootroot';
+    $db = 'myDBtest';
 
-    echo "Name: $name <br> Email: $email <br> Gender: $gender <br> Status: $status";
+    $conn = new mysqli($server, $user, $pass, $db);
+    if ($conn->connect_error) {
+        die('Failed: ' . $conn->connect_error);
+    }
+    // check table for exist if not exist - create
+    $extQuery = "SHOW TABLES LIKE 'users'";
+    $ext = $conn->query($extQuery);
+    if (!$ext->num_rows) {
+        $createTable = "CREATE TABLE users (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(30) NOT NULL,
+            email VARCHAR(30) NOT NULL,
+            gender VARCHAR(6) NOT NULL,
+            status VARCHAR(8) NOT NULL)";
+        $conn->query($createTable);
+    }
+
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $gender = $_POST['gender'];
+    $status = $_POST['status'];
+
+    if(isset($name) && isset($email) && isset($gender) && isset($status))
+    {
+        $query = "INSERT INTO users (name, email, gender, status) VALUES ('{$name}', '{$email}', '{$gender}', '{$status}')";
+        if ($conn->query($query)) {
+            echo "Запись добавлена!";
+        }
+    }
 ?>
+
+<a class="btn" href="/users">Список пользователей</a>

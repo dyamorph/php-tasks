@@ -14,4 +14,8 @@ class UserController extends Controller
     {
         return $this->view->render('userinfo.php', 'template.php');
     }
+    public function all()
+    {
+        return $this->view->render('show.php', 'template.php');
+    }
 }

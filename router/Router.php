@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 
-// use Controllers\AppController;
+// namespace Router;
+// use \Controllers\AppController;
 
 class Router
 {
