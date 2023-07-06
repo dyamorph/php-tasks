@@ -15,7 +15,7 @@
             <h1>Header</h1>
         </header>
         <main class="main">
-            <?php include 'views/'.$content; ?>
+            <?php include 'views/' . $content; ?>
         </main>
         <footer class="footer">
             <h1>Footer</h1>

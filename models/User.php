@@ -1,6 +1,9 @@
-<?php 
+<?php
 
-class User 
+declare(strict_types=1);
+
+namespace models;
+
+class User
 {
-    
 }

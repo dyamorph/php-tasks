@@ -1,16 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
-// namespace Core;
+namespace core;
 
-class Controller {
-	
-	public $model;
-	public $view;
-	
-	function __construct()
-	{
-		$this->view = new View();
+class Controller
+{
+    public $model;
+    public $view;
+
+    public function __construct()
+    {
+        $this->view = new View();
         $this->model = new Model();
-	}
+    }
 }

@@ -1,24 +1,26 @@
 <?php
-require_once(dirname(__FILE__) . '/../config/config.php');
 
-$dal = new DAL();
+use db\DB;
 
-$results = $dal->getAllUsers();
-
+$db = new DB();
+$results = $db->getAllUsers();
 $arrayLenght = count($results);
-echo "<div>";
-echo "<p>Всего пользователей: {$arrayLenght}</p>";
-echo "<table><tr><th>Id</th><th>Name</th><th>Email</th><th>Gender</th><th>Status</th></tr>";
+?>
 
-
-foreach ($results as $result) {
-    echo "<tr>";
-        echo "<td>" . $result->id . "</td>";
-        echo "<td>" . $result->name . "</td>";
-        echo "<td>" . $result->email . "</td>";
-        echo "<td>" . $result->gender . "</td>";
-        echo "<td>" . $result->status . "</td>";
-    echo "</tr>";
-}
-echo "</table>";
-echo "</div>";
+<div>
+    <p>Всего пользователей: <?= $arrayLenght ?></p>
+    <table>
+        <tr>
+            <th>Id</th><th>Name</th><th>Email</th><th>Gender</th><th>Status</th>
+        </tr>
+            <?php foreach ($results as $result) : ?>
+                <tr>
+                    <td><a href=/user/<?= $result['id']?>><?= $result['id'] ?></a></td>
+                    <td><?= $result['name'] ?></td>
+                    <td><?= $result['email'] ?></td>
+                    <td><?= $result['gender'] ?></td>
+                    <td><?= $result['status'] ?></td>
+                </tr>
+            <?php endforeach ?>
+    </table>
+</div>

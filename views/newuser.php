@@ -2,11 +2,11 @@
     <h3 class="form-title">Add new user</h3>
     <p class="form-filed">
         <label for="name">Your first and last name</label>
-        <input id="name" type="text" name="name" placeholder="Enter your first and last name">
+        <input id="name" type="text" name="name" placeholder="Enter your first and last name" required>
     </p>
     <p class="form-filed">
         <label for="email">Enter your email</label>
-        <input id="email" type="text" name="email" placeholder="Enter your email">
+        <input id="email" type="text" name="email" placeholder="Enter your email" required>
     </p>
     <p class="form-filed">
         <label for="genre">Gender</label>

@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
-// namespace Router;
-// use \Controllers\AppController;
+namespace router;
+
+use controllers\AppController;
+use controllers\UserController;
 
 class Router
 {
@@ -10,39 +13,39 @@ class Router
 
     public function __construct()
     {
-        $routesPath = ROOT . '/routes/web.php';
+        $routesPath = __DIR__ . '/../routes/web.php';
         $this->routes = include($routesPath);
     }
+
     private function getURI()
     {
         if (!empty($_SERVER['REQUEST_URI'])) {
             return $_SERVER['REQUEST_URI'];
         }
     }
+
     private function getMETHOD()
     {
         if (!empty($_SERVER['REQUEST_METHOD'])) {
             return $_SERVER['REQUEST_METHOD'];
         }
     }
+
     public function run()
     {
         $uri = $this->getURI();
         $method = $this->getMETHOD();
         if ($uri === '/') {
-            $appController = new AppController;
+            $appController = new AppController();
             $result = $appController->index();
         }
         if ($method === "GET") {
             foreach ($this->routes['GET'] as $uriPattern => $path) {
                 if (preg_match("~$uriPattern~", $uri)) {
-                    $controllerName = ucfirst($path[0]) . 'Controller';
-                    $actionName = $path[1];
-                    $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
-                    if (file_exists($controllerFile)) {
-                        include_once ($controllerFile);
+                    if ($path[0] === 'user') {
+                        $controllerObject = new UserController();
                     }
-                    $controllerObject = new $controllerName;
+                    $actionName = $path[1];
                     $result = $controllerObject->$actionName();
                     if ($result != null) {
                         break;
@@ -53,13 +56,10 @@ class Router
         if ($method === "POST") {
             foreach ($this->routes['POST'] as $uriPattern => $path) {
                 if (preg_match("~$uriPattern~", $uri)) {
-                    $controllerName = ucfirst($path[0]) . 'Controller';
-                    $actionName = $path[1];
-                    $controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
-                    if (file_exists($controllerFile)) {
-                        include_once ($controllerFile);
+                    if ($path[0] === 'user') {
+                        $controllerObject = new UserController();
                     }
-                    $controllerObject = new $controllerName;
+                    $actionName = $path[1];
                     $result = $controllerObject->$actionName();
                     if ($result != null) {
                         break;
