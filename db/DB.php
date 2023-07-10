@@ -9,6 +9,8 @@ use mysqli;
 class DB
 {
     private $db;
+    private $fields = [];
+    private $table;
 
     public function __construct()
     {
@@ -16,17 +18,49 @@ class DB
         $this->db = include($dbConfig);
     }
 
-    public function getAllUsers()
+    public function get($table, $fields = [], $where = null, $whereData = null)
     {
-        $sql = "SELECT users.id as id, users.name as name, users.email as email, 
-        users.gender as gender, users.status as status FROM users";
+        $sql = '';
+        if (empty($fields)) {
+            $sql = "SELECT * FROM $table";
+        } else {
+            $res = '';
+            foreach ($fields as $field) {
+                $res .= "$table.$field, ";
+            }
+            $res[strlen($res) - 2] = ' ';
+            $sql = "SELECT $res FROM $table";
+        }
+        if (isset($where)) {
+            $sql .= " WHERE $where = $whereData";
+        }
         return $this->query($sql);
     }
 
-    public function getOneUser($id)
+    public function set($table, $fields, $values)
     {
-        $sql = "SELECT users.id as id, users.name as name, users.email as email, 
-        users.gender as gender, users.status as status FROM users WHERE user.id = '$id'";
+        $res = '';
+        foreach ($fields as $field) {
+            $res .= "$field, ";
+        }
+        $res[strlen($res) - 2] = ' ';
+        $sql = "INSERT INTO $table ($res) VALUES ('$values[0]', '$values[1]', '$values[2]', '$values[3]')";
+        return $this->query($sql);
+    }
+
+    public function delete($table, $id)
+    {
+        $sql = "DELETE FROM $table WHERE $table.id = '$id'";
+        return $this->query($sql);
+    }
+
+    public function update($table, $fileds, $values, $where = null, $whereData = null)
+    {
+        $sql = "UPDATE $table SET $fileds[0] = '$values[0]', $fileds[1] = '$values[1]',
+                $fileds[2] = '$values[2]', $fileds[3] = '$values[3]'";
+        if (isset($where)) {
+            $sql .= " WHERE $where = $whereData";
+        }
         return $this->query($sql);
     }
 

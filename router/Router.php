@@ -37,7 +37,7 @@ class Router
         $method = $this->getMETHOD();
         if ($uri === '/') {
             $appController = new AppController();
-            $result = $appController->index();
+            $appController->index();
         }
         if ($method === "GET") {
             foreach ($this->routes['GET'] as $uriPattern => $path) {
@@ -47,6 +47,7 @@ class Router
                     }
                     $actionName = $path[1];
                     $result = $controllerObject->$actionName();
+
                     if ($result != null) {
                         break;
                     }
@@ -55,6 +56,25 @@ class Router
         }
         if ($method === "POST") {
             foreach ($this->routes['POST'] as $uriPattern => $path) {
+                    $uriArray = explode('/', $uri);
+                if (preg_match("~users/\d*$~", $uri)) {
+                    if (isset($uriArray[2])) {
+                        if (preg_match("~\d~", $uriArray[2])) {
+                            $controllerObject = new UserController();
+                            $controllerObject->delete();
+                            break;
+                        }
+                    }
+                }
+                if (preg_match("~users/update/\d*$~", $uri)) {
+                    if (isset($uriArray[2])) {
+                        if (preg_match("~\d~", $uriArray[3])) {
+                            $controllerObject = new UserController();
+                            $controllerObject->update();
+                            break;
+                        }
+                    }
+                }
                 if (preg_match("~$uriPattern~", $uri)) {
                     if ($path[0] === 'user') {
                         $controllerObject = new UserController();

@@ -21,5 +21,6 @@
             <h1>Footer</h1>
         </footer>
     </div>
+    <script src="../assets/main.js"></script>
 </body>
 </html>

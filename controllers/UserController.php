@@ -20,6 +20,16 @@ class UserController extends Controller
 
     public function all()
     {
-        $this->view->render('show.php', 'template.php');
+        $this->view->render('showall.php', 'template.php');
+    }
+
+    public function delete()
+    {
+        $this->view->render('delete.php', 'template.php');
+    }
+
+    public function update()
+    {
+        $this->view->render('edit.php', 'template.php');
     }
 }

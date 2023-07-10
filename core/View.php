@@ -10,7 +10,7 @@ class View
     {
         $file = 'views/' . $template;
         if (file_exists($file)) {
-            include $file;
+            include_once $file;
         }
     }
 }

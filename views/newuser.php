@@ -11,6 +11,7 @@
     <p class="form-filed">
         <label for="genre">Gender</label>
         <select id="genre" name="gender">
+            <option value=""></option>
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select>
@@ -18,6 +19,7 @@
     <p class="form-filed">
         <label for="status">Status</label>
         <select id="status" name="status">
+            <option value=""></option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
         </select>
