@@ -20,7 +20,6 @@ if (!empty($_POST)) {
     $gender = $_POST['gender'];
     $status = $_POST['status'];
     $db->update('users', ['name', 'email', 'gender', 'status'], [$name, $email, $gender, $status], 'users.id', $id);
-    echo "<a class='btn' href='/users'>Список пользователей</a>";
 }
 
 ?>

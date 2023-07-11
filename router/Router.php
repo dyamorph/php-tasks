@@ -9,7 +9,7 @@ use controllers\UserController;
 
 class Router
 {
-    private $routes;
+    private array $routes;
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class Router
         }
     }
 
-    public function run()
+    public function run(): void
     {
         $uri = $this->getURI();
         $method = $this->getMETHOD();
