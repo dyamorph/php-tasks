@@ -8,8 +8,8 @@ use core\Controller;
 
 class AppController extends Controller
 {
-    public function index()
+    public function index(): void
     {
-        $this->view->render('mainpage.php', 'template.php');
+        $this->view->render('index.php', 'template.php');
     }
 }

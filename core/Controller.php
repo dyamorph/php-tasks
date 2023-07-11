@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace core;
 
+
+
 class Controller
 {
-    public $model;
-    public $view;
+    public Model $model;
+    public View $view;
 
     public function __construct()
     {

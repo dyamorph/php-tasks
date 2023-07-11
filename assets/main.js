@@ -1,4 +1,4 @@
-const deleteBtns = document.querySelectorAll('.delete-btn');
+const deleteBtns = document.querySelectorAll('.users-table-delete-btn');
 
 deleteBtns.forEach(btn => {
     btn.addEventListener('click', () => {

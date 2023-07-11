@@ -3,7 +3,8 @@
 return [
     'GET' => [
         '/users/new' => ['user', 'new'],
-        '/users' => ['user', 'all'],
+        '/users' => ['user', 'index'],
+        '/users/edit/{id}' => ['user', 'edit'],
     ],
     'POST' => [
         '/users/create' => ['user', 'create'],

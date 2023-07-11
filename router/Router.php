@@ -13,22 +13,24 @@ class Router
 
     public function __construct()
     {
-        $routesPath = __DIR__ . '/../routes/web.php';
+        $routesPath = __DIR__.'/../routes/web.php';
         $this->routes = include($routesPath);
     }
 
     private function getURI()
     {
-        if (!empty($_SERVER['REQUEST_URI'])) {
+        if ( ! empty($_SERVER['REQUEST_URI'])) {
             return $_SERVER['REQUEST_URI'];
         }
+        return '';
     }
 
     private function getMETHOD()
     {
-        if (!empty($_SERVER['REQUEST_METHOD'])) {
+        if ( ! empty($_SERVER['REQUEST_METHOD'])) {
             return $_SERVER['REQUEST_METHOD'];
         }
+        return '';
     }
 
     public function run(): void
@@ -41,51 +43,67 @@ class Router
         }
         if ($method === "GET") {
             foreach ($this->routes['GET'] as $uriPattern => $path) {
+                $uriArray = explode('/', $uri);
+
+                if (isset($uriArray[2])
+                    && preg_match("~/users/edit/\d*\?$~", $uri)
+                    && preg_match("~\d*\?~", $uriArray[3])
+                ) {
+                    $id = rtrim($uriArray[3], '?');
+                    $controllerObject = new UserController();
+                    $controllerObject->edit($id);
+                    break;
+                }
+
                 if (preg_match("~$uriPattern~", $uri)) {
                     if ($path[0] === 'user') {
                         $controllerObject = new UserController();
                     }
                     $actionName = $path[1];
-                    $result = $controllerObject->$actionName();
-
-                    if ($result != null) {
-                        break;
+                    if (isset($controllerObject)) {
+                        $result = $controllerObject->$actionName();
+                        if ($result !== null) {
+                            break;
+                        }
                     }
                 }
             }
         }
         if ($method === "POST") {
             foreach ($this->routes['POST'] as $uriPattern => $path) {
-                    $uriArray = explode('/', $uri);
-                if (preg_match("~users/\d*$~", $uri)) {
-                    if (isset($uriArray[2])) {
-                        if (preg_match("~\d~", $uriArray[2])) {
-                            $controllerObject = new UserController();
-                            $controllerObject->delete();
-                            break;
-                        }
-                    }
+                $uriArray = explode('/', $uri);
+                if (isset($uriArray[2])
+                    && preg_match("~users/\d*$~", $uri)
+                    && preg_match("~\d~", $uriArray[2])
+                ) {
+                    $id = $uriArray[2];
+                    $controllerObject = new UserController();
+                    $controllerObject->delete($id);
+                    break;
                 }
-                if (preg_match("~users/update/\d*$~", $uri)) {
-                    if (isset($uriArray[2])) {
-                        if (preg_match("~\d~", $uriArray[3])) {
-                            $controllerObject = new UserController();
-                            $controllerObject->update();
-                            break;
-                        }
-                    }
+                if (isset($uriArray[2])
+                    && preg_match("~users/update/\d*$~", $uri)
+                    && preg_match("~\d~", $uriArray[3])
+                ) {
+                    $id = $uriArray[3];
+                    $controllerObject = new UserController();
+                    $controllerObject->update($id);
+                    break;
                 }
                 if (preg_match("~$uriPattern~", $uri)) {
                     if ($path[0] === 'user') {
                         $controllerObject = new UserController();
                     }
                     $actionName = $path[1];
-                    $result = $controllerObject->$actionName();
-                    if ($result != null) {
-                        break;
+                    if (isset($controllerObject)) {
+                        $result = $controllerObject->$actionName();
+                        if ($result !== null) {
+                            break;
+                        }
                     }
                 }
             }
         }
     }
 }
+

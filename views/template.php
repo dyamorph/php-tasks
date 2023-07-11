@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/../assets/main.css">
+    <link rel="stylesheet" href="/assets/main.css">
 </head>
 
 <body>
@@ -38,7 +38,7 @@
             </div>
         </footer>
     </div>
-    <script src="../assets/main.js"></script>
+    <script src="/assets/main.js"></script>
 </body>
 
 </html>

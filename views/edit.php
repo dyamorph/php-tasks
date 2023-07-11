@@ -1,30 +1,4 @@
-<?php
-
-use db\DB;
-
-$db = new DB();
-$uri = $_SERVER['REQUEST_URI'];
-$uriArray = explode('/', $uri);
-$id = $uriArray[3];
-
-$results = $db->get('users', [], 'users.id', $id);
-
-$name = $results[0]['name'];
-$email = $results[0]['email'];
-$gender = $results[0]['gender'];
-$status = $results[0]['status'];
-
-if (!empty($_POST)) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $gender = $_POST['gender'];
-    $status = $_POST['status'];
-    $db->update('users', ['name', 'email', 'gender', 'status'], [$name, $email, $gender, $status], 'users.id', $id);
-}
-
-?>
-
-<form class="user-form" method="POST">
+<form class="user-form" action="/users/update/<?= $id ?>" method="POST">
     <h3 class="form-title">Update user</h3>
     <p class="form-filed">
         <label for="name">Your first and last name</label>

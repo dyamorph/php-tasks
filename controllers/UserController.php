@@ -5,31 +5,86 @@ declare(strict_types=1);
 namespace controllers;
 
 use core\Controller;
+use models\UserModel;
 
 class UserController extends Controller
 {
-    public function new()
+    public UserModel $userModel;
+
+    public function __construct()
     {
-        $this->view->render('newuser.php', 'template.php');
+        parent::__construct();
+        $this->userModel = new UserModel();
     }
 
-    public function create()
+    public function new(): void
     {
-        $this->view->render('userinfo.php', 'template.php');
+        $this->view->render('new.php', 'template.php');
     }
 
-    public function all()
+    public function create(): void
     {
-        $this->view->render('showall.php', 'template.php');
+        if ( ! empty($_POST)) {
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $gender = $_POST['gender'];
+            $status = $_POST['status'];
+            $this->userModel->set(
+                'users',
+                ['name', 'email', 'gender', 'status'],
+                [$name, $email, $gender, $status]
+            );
+            header("Location: /users");
+        }
     }
 
-    public function delete()
+    public function index(): void
     {
-        $this->view->render('delete.php', 'template.php');
+        $results = $this->userModel->getAll('users');
+        $this->view->render(
+            'show.php',
+            'template.php',
+            ['results' => $results]
+        );
     }
 
-    public function update()
+    public function delete(string $id): void
     {
-        $this->view->render('edit.php', 'template.php');
+        $this->userModel->delete('users', $id);
+        header("Location: /users");
+    }
+
+    public function edit(string $id): void
+    {
+        $results = $this->userModel->getOne('users', [], 'users.id', $id);
+        $this->view->render(
+            'edit.php',
+            'template.php',
+            [
+                'id'     => $results[0]['id'],
+                'name'   => $results[0]['name'],
+                'email'  => $results[0]['email'],
+                'gender' => $results[0]['gender'],
+                'status' => $results[0]['status']
+            ]
+        );
+    }
+
+    public function update(string $id): void
+    {
+        if ( ! empty($_POST)) {
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $gender = $_POST['gender'];
+            $status = $_POST['status'];
+            $this->userModel->update(
+                'users',
+                ['name', 'email', 'gender', 'status'],
+                [$name, $email, $gender, $status],
+                'users.id',
+                $id
+            );
+            header("Location: /users");
+        }
     }
 }
