@@ -18,7 +18,7 @@ body {
 
 .container {
     max-width: 1280px;
-    margin: 0 auto;    
+    margin: 0 auto;
 }
 
 .header,
@@ -50,7 +50,7 @@ body {
 }
 
 .navbar-item {
-    background-color: greenyellow;  
+    background-color: greenyellow;
     border: 1px solid black;
     border-radius: 5px;
 }
@@ -109,17 +109,30 @@ input[type="text"],
 input[type="email"],
 select,
 textarea {
-    font: 1rem / 1.4 sans-serif; 
+    font: 1rem / 1.4 sans-serif;
     display: block;
     box-sizing: border-box;
     width: 100%;
     padding: 5px 10px;
+    outline: none;
+}
+
+.form-input {
+    border: 2px solid transparent;
 }
 
 label {
     font-size: 18px;
     display: block;
     margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.error-input {
+    border: 2px solid red;
 }
 
 .users {

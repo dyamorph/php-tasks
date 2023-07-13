@@ -17,8 +17,8 @@
                         </form>
                     </td>
                     <td>
-                        <form method="POST" action="/users/<?= $result['id']?>">
-                            <button type="submit" class="users-table-delete-btn">Удалить</button>
+                        <form data-id="<?= $result['id']?>" id="delete"  method="POST" action="/users/<?= $result['id']?>">
+                            <button data-id="<?= $result['id']?>" type="submit" class="users-table-delete-btn">Удалить</button>
                         </form>
                     </td>
                 </tr>

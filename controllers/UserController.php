@@ -6,6 +6,7 @@ namespace controllers;
 
 use core\Controller;
 use models\UserModel;
+use PgSql\Connection;
 
 class UserController extends Controller
 {
@@ -24,18 +25,26 @@ class UserController extends Controller
 
     public function create(): void
     {
-        if ( ! empty($_POST)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $gender = $_POST['gender'];
-            $status = $_POST['status'];
-            $this->userModel->set(
-                'users',
-                ['name', 'email', 'gender', 'status'],
-                [$name, $email, $gender, $status]
-            );
-            header("Location: /users");
+        function clearData($val): string
+        {
+            $val = trim($val);
+            $val = stripslashes($val);
+            $val = strip_tags($val);
+            return htmlspecialchars($val);
         }
+
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $gender = $_POST['gender'];
+        $status = $_POST['status'];
+
+        $this->userModel->set(
+            'users',
+            ['name', 'email', 'gender', 'status'],
+            [$name, $email, $gender, $status]
+        );
+
+        header("Location: /users");
     }
 
     public function index(): void
@@ -72,7 +81,7 @@ class UserController extends Controller
 
     public function update(string $id): void
     {
-        if ( ! empty($_POST)) {
+        if (!empty($_POST)) {
             $name = $_POST['name'];
             $email = $_POST['email'];
             $gender = $_POST['gender'];

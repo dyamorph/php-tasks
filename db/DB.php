@@ -100,8 +100,6 @@ class DB
                 $queryResults[] = $result;
             }
         }
-
-
         return $queryResults;
     }
 }

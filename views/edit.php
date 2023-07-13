@@ -20,7 +20,7 @@
     <p class="form-filed">
         <label for="status">Status</label>
         <select id="status" name="status">
-            <option <?= $status === "active" ? "selected" : '' ?>value="active">Active</option>
+            <option <?= $status === "active" ? "selected" : '' ?> value="active">Active</option>
             <option <?= $status === "inactive" ? "selected" : '' ?> value="inactive">Inactive</option>
         </select>
     </p>

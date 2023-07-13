@@ -17,7 +17,7 @@ class Router
         $this->routes = include($routesPath);
     }
 
-    private function getURI()
+    private function getURI(): string
     {
         if ( ! empty($_SERVER['REQUEST_URI'])) {
             return $_SERVER['REQUEST_URI'];
@@ -25,7 +25,7 @@ class Router
         return '';
     }
 
-    private function getMETHOD()
+    private function getMETHOD(): string
     {
         if ( ! empty($_SERVER['REQUEST_METHOD'])) {
             return $_SERVER['REQUEST_METHOD'];
@@ -72,19 +72,13 @@ class Router
         if ($method === "POST") {
             foreach ($this->routes['POST'] as $uriPattern => $path) {
                 $uriArray = explode('/', $uri);
-                if (isset($uriArray[2])
-                    && preg_match("~users/\d*$~", $uri)
-                    && preg_match("~\d~", $uriArray[2])
-                ) {
+                if (isset($uriArray[2]) && preg_match("~users/\d*$~", $uri)) {
                     $id = $uriArray[2];
                     $controllerObject = new UserController();
                     $controllerObject->delete($id);
                     break;
                 }
-                if (isset($uriArray[2])
-                    && preg_match("~users/update/\d*$~", $uri)
-                    && preg_match("~\d~", $uriArray[3])
-                ) {
+                if (isset($uriArray[2]) && preg_match("~users/update/\d*$~", $uri)) {
                     $id = $uriArray[3];
                     $controllerObject = new UserController();
                     $controllerObject->update($id);
