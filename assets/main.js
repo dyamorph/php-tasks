@@ -1,7 +1,9 @@
 const deleteBtns = document.querySelectorAll(".users-table-delete-btn");
 const deleteForms = document.querySelectorAll("#delete");
 const userForm = document.querySelector(".user-form");
+const updateForm = document.querySelector(".update-form");
 const submitUserForm = document.querySelector(".submit-btn");
+const updateUserForm = document.querySelector(".update-btn");
 
 deleteBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -40,6 +42,7 @@ function validate(form) {
 
     const inputs = document.querySelectorAll('.form-input');
     const selects = document.querySelectorAll('.select-input')
+    console.log(inputs);
 
     for (let input of inputs) {
         removeErrors(input);
@@ -77,10 +80,21 @@ function validate(form) {
     return result;
 }
 
-submitUserForm.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (validate(userForm) === true) {
-        userForm.submit();
-    }
-})
+if (submitUserForm) {
+    submitUserForm.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (validate(userForm) === true) {
+            userForm.submit();
+        }
+    })
+}
+if (updateUserForm) {
+    updateUserForm.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (validate(updateForm) === true) {
+            updateForm.submit();
+        }
+    })
+}
+
 

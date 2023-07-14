@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace controllers;
 
+use app\UserValidator;
 use core\Controller;
+use core\Request;
 use models\UserModel;
-use PgSql\Connection;
 
 class UserController extends Controller
 {
     public UserModel $userModel;
+    public Request $request;
+    public UserValidator $userValidator;
 
     public function __construct()
     {
         parent::__construct();
         $this->userModel = new UserModel();
+        $this->request = new Request();
+        $this->userValidator = new UserValidator();
     }
 
     public function new(): void
@@ -25,26 +30,27 @@ class UserController extends Controller
 
     public function create(): void
     {
-        function clearData($val): string
-        {
-            $val = trim($val);
-            $val = stripslashes($val);
-            $val = strip_tags($val);
-            return htmlspecialchars($val);
+        $data = $this->request->getBody();
+        $this->userValidator->loadData($data);
+        if (!$this->userValidator->validate()) {
+            $this->view->render(
+                'new.php',
+                'template.php',
+                [$data, $this->userValidator->errors]
+            );
+        } else {
+            $name = $data['name'];
+            $email = $data['email'];
+            $gender = $data['gender'];
+            $status = $data['status'];
+
+            $this->userModel->set(
+                'users',
+                ['name', 'email', 'gender', 'status'],
+                [$name, $email, $gender, $status]
+            );
+            header("Location: /users");
         }
-
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $gender = $_POST['gender'];
-        $status = $_POST['status'];
-
-        $this->userModel->set(
-            'users',
-            ['name', 'email', 'gender', 'status'],
-            [$name, $email, $gender, $status]
-        );
-
-        header("Location: /users");
     }
 
     public function index(): void
@@ -81,19 +87,20 @@ class UserController extends Controller
 
     public function update(string $id): void
     {
-        if (!empty($_POST)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $gender = $_POST['gender'];
-            $status = $_POST['status'];
-            $this->userModel->update(
-                'users',
-                ['name', 'email', 'gender', 'status'],
-                [$name, $email, $gender, $status],
-                'users.id',
-                $id
-            );
-            header("Location: /users");
-        }
+        $data = $this->request->getBody();
+
+        $name = $data['name'];
+        $email = $data['email'];
+        $gender = $data['gender'];
+        $status = $data['status'];
+
+        $this->userModel->update(
+            'users',
+            ['name', 'email', 'gender', 'status'],
+            [$name, $email, $gender, $status],
+            'users.id',
+            $id
+        );
+        header("Location: /users");
     }
 }

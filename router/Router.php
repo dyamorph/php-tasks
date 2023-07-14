@@ -6,37 +6,24 @@ namespace router;
 
 use controllers\AppController;
 use controllers\UserController;
+use core\Request;
 
 class Router
 {
     private array $routes;
+    public Request $request;
 
     public function __construct()
     {
         $routesPath = __DIR__.'/../routes/web.php';
         $this->routes = include($routesPath);
-    }
-
-    private function getURI(): string
-    {
-        if ( ! empty($_SERVER['REQUEST_URI'])) {
-            return $_SERVER['REQUEST_URI'];
-        }
-        return '';
-    }
-
-    private function getMETHOD(): string
-    {
-        if ( ! empty($_SERVER['REQUEST_METHOD'])) {
-            return $_SERVER['REQUEST_METHOD'];
-        }
-        return '';
+        $this->request = new Request();
     }
 
     public function run(): void
     {
-        $uri = $this->getURI();
-        $method = $this->getMETHOD();
+        $uri = $this->request->getUri();
+        $method = $this->request->getMethod();
         if ($uri === '/') {
             $appController = new AppController();
             $appController->index();

@@ -1,28 +1,38 @@
-<form class="user-form" action="/users/update/<?= $id ?>" method="POST">
+<form class="update-form" action="/users/update/<?= $id ?? '' ?>" method="POST">
     <h3 class="form-title">Update user</h3>
-    <p class="form-filed">
+    <p class="form-field">
         <label for="name">Your first and last name</label>
-        <input id="name" type="text" name="name" placeholder="Enter your first and last name" required 
-            value="<?= $name ?>">
+        <input id="name" class="form-input" type="text" name="name"
+               placeholder="Enter your first and last name"
+               data-name="name"
+               value="<?= $name ?? '' ?>">
     </p>
-    <p class="form-filed">
+    <p class="form-field">
         <label for="email">Enter your email</label>
-        <input id="email" type="text" name="email" placeholder="Enter your email" required
-            value="<?= $email ?>">
+        <input id="email" class="form-input" type="text" name="email" placeholder="Enter your email"
+               data-email="email" value="<?= $email ?? '' ?>">
     </p>
-    <p class="form-filed">
-        <label for="genre">Gender</label>
-        <select id="genre" name="gender">
-            <option <?= $gender === "male" ? "selected" : '' ?> value="male">Male</option>
-            <option <?= $gender === "female" ? "selected" : '' ?> value="female">Female</option>
+    <p class="form-field">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" data-gender="gender">
+            <option <?= $gender === "male" ? "selected" : '' ?> value="male">
+                Male
+            </option>
+            <option <?= $gender === "female" ? "selected" : '' ?>
+                    value="female">Female
+            </option>
         </select>
     </p>
-    <p class="form-filed">
+    <p class="form-field">
         <label for="status">Status</label>
-        <select id="status" name="status">
-            <option <?= $status === "active" ? "selected" : '' ?> value="active">Active</option>
-            <option <?= $status === "inactive" ? "selected" : '' ?> value="inactive">Inactive</option>
+        <select id="status" name="status" data-status="status">
+            <option <?= $status === "active" ? "selected" : '' ?>
+                    value="active">Active
+            </option>
+            <option <?= $status === "inactive" ? "selected" : '' ?>
+                    value="inactive">Inactive
+            </option>
         </select>
     </p>
-    <button class="btn submit-btn" type="submit" name="submit">Обновить</button>
+    <button class="btn update-btn" type="submit">Обновить</button>
 </form>

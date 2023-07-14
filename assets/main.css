@@ -76,6 +76,7 @@ body {
     border-radius: 8px;
     border: 1px solid black;
     font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -86,11 +87,13 @@ body {
     background-color: rgb(60, 255, 0);
 }
 
-.submit-btn {
+.submit-btn,
+.update-btn {
     cursor: pointer;
 }
 
-.user-form {
+.user-form,
+.update-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -117,10 +120,6 @@ textarea {
     outline: none;
 }
 
-.form-input {
-    border: 2px solid transparent;
-}
-
 label {
     font-size: 18px;
     display: block;
@@ -129,6 +128,8 @@ label {
 
 .error-message {
     color: red;
+    display: block;
+    margin-top: 5px;
 }
 
 .error-input {
