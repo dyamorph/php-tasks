@@ -12,7 +12,7 @@ class DB
 
     public function __construct()
     {
-        $dbConfig = __DIR__.'/../config/DB.php';
+        $dbConfig = __DIR__ . '/../config/DB.php';
         $this->db = include($dbConfig);
     }
 
@@ -82,10 +82,10 @@ class DB
         $res = $conn->query($sql);
 
         if ($res) {
-            if ( ! str_contains($sql, 'SELECT')) {
+            if (!str_contains($sql, 'SELECT')) {
                 return true;
             }
-        } elseif ( ! str_contains($sql, 'SELECT')) {
+        } elseif (!str_contains($sql, 'SELECT')) {
             return false;
         } else {
             return null;

@@ -15,7 +15,7 @@ class Router
 
     public function __construct()
     {
-        $routesPath = __DIR__.'/../routes/web.php';
+        $routesPath = __DIR__ . '/../routes/web.php';
         $this->routes = include($routesPath);
         $this->request = new Request();
     }

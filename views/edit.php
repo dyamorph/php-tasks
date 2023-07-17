@@ -9,29 +9,22 @@
     </p>
     <p class="form-field">
         <label for="email">Enter your email</label>
-        <input id="email" class="form-input" type="text" name="email" placeholder="Enter your email"
+        <input id="email" class="form-input" type="text" name="email"
+               placeholder="Enter your email"
                data-email="email" value="<?= $email ?? '' ?>">
     </p>
     <p class="form-field">
         <label for="gender">Gender</label>
         <select id="gender" name="gender" data-gender="gender">
-            <option <?= $gender === "male" ? "selected" : '' ?> value="male">
-                Male
-            </option>
-            <option <?= $gender === "female" ? "selected" : '' ?>
-                    value="female">Female
-            </option>
+            <option <?= $gender === "male" ? "selected" : '' ?> value="male">Male</option>
+            <option <?= $gender === "female" ? "selected" : '' ?>value="female">Female</option>
         </select>
     </p>
     <p class="form-field">
         <label for="status">Status</label>
         <select id="status" name="status" data-status="status">
-            <option <?= $status === "active" ? "selected" : '' ?>
-                    value="active">Active
-            </option>
-            <option <?= $status === "inactive" ? "selected" : '' ?>
-                    value="inactive">Inactive
-            </option>
+            <option <?= $status === "active" ? "selected" : '' ?> value="active">Active</option>
+            <option <?= $status === "inactive" ? "selected" : '' ?> value="inactive">Inactive</option>
         </select>
     </p>
     <button class="btn update-btn" type="submit">Обновить</button>
