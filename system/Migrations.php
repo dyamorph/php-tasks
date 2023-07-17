@@ -21,20 +21,19 @@ class Migrations
         );
     }
 
-    public function applyMigrations()
+    public function applyMigrations(): void
     {
         $this->createMigrationsTable();
         $appliedMigrations = $this->getAppliedMigrations();
 
         $newMigrations = [];
-        $files = scandir(__DIR__ . '/../migrations');
+        $files = scandir(__DIR__ . '/../database/migrations');
         $toApplyMigrations = array_diff($files, $appliedMigrations);
         foreach ($toApplyMigrations as $migration) {
             if ($migration === '.' || $migration === '..') {
                 continue;
             }
-
-            require_once __DIR__ . '/../migrations/' . $migration;
+            require_once __DIR__ . '/../database/migrations' . $migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
             $instance = new $className();
             $this->log("Applying migration $migration");
@@ -50,22 +49,21 @@ class Migrations
         }
     }
 
-    protected function createMigrationsTable()
+    protected function createMigrationsTable(): void
     {
         $this->db->execute_query(
             "CREATE TABLE IF NOT EXISTS migrations (
             id INT AUTO_INCREMENT PRIMARY KEY,
             migration VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )  ENGINE=INNODB;"
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
         );
     }
 
-    protected function getAppliedMigrations()
+    protected function getAppliedMigrations(): array
     {
         $res = $this->db->execute_query("SELECT migration FROM migrations");
         $result = [];
-        while ($row = $res->fetch_array()) {
+        while ($row = $res->fetch_assoc()) {
             foreach ($row as $key => $value) {
                 $result[$key] = $value;
             }
@@ -73,7 +71,7 @@ class Migrations
         return $result;
     }
 
-    protected function saveMigrations(array $newMigrations)
+    protected function saveMigrations(array $newMigrations): void
     {
         $str = implode(',', array_map(fn($m) => "('$m')", $newMigrations));
         $statement = $this->db->prepare(
@@ -82,12 +80,12 @@ class Migrations
         $statement->execute();
     }
 
-    public function prepare($sql)
+    public function prepare($sql): false|\mysqli_stmt
     {
         return $this->db->prepare($sql);
     }
 
-    private function log($message)
+    private function log($message): void
     {
         echo "[" . date("Y-m-d H:i:s") . "] - " . $message . PHP_EOL;
     }

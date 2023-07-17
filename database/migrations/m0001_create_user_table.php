@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace database\migrations;
+
 use system\Migrations;
 
 class m0001_create_user_table

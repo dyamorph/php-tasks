@@ -1,9 +1,13 @@
 <?php
 
 require_once 'system/Migrations.php';
+require_once 'system/Seeds.php';
 
 use system\Migrations;
+use system\Seeds;
 
-$migrate = new Migrations();
+$migration = new Migrations();
+$migration->applyMigrations();
 
-$migrate->applyMigrations();
+$seeds = new Seeds();
+$seeds->seedUsers();
