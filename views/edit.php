@@ -1,31 +1,35 @@
-<form class="update-form" action="/users/update/<?= $id ?? '' ?>" method="POST">
-    <h3 class="form-title">Update user</h3>
-    <p class="form-field">
+<form class="update-form col-sm-12 col-md-12 col-lg-6 py-5" action="/users/update/<?= $id ?? '' ?>" method="POST">
+    <h3 class="h2 mb-5">Update user</h3>
+    <div class="form-group">
         <label for="name">Your first and last name</label>
-        <input id="name" class="form-input" type="text" name="name"
+        <input id="name" class="form-input form-control" type="text" name="name"
                placeholder="Enter your first and last name"
                data-name="name"
                value="<?= $name ?? '' ?>">
-    </p>
-    <p class="form-field">
+        <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-group">
         <label for="email">Enter your email</label>
-        <input id="email" class="form-input" type="text" name="email"
+        <input id="email" class="form-input form-control" type="text" name="email"
                placeholder="Enter your email"
                data-email="email" value="<?= $email ?? '' ?>">
-    </p>
-    <p class="form-field">
+        <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-group">
         <label for="gender">Gender</label>
-        <select id="gender" name="gender" data-gender="gender">
+        <select id="gender" class="form-control" name="gender" data-gender="gender">
             <option <?= $gender === "male" ? "selected" : '' ?> value="male">Male</option>
             <option <?= $gender === "female" ? "selected" : '' ?>value="female">Female</option>
         </select>
-    </p>
-    <p class="form-field">
+        <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-group">
         <label for="status">Status</label>
-        <select id="status" name="status" data-status="status">
+        <select id="status" class="form-control" name="status" data-status="status">
             <option <?= $status === "active" ? "selected" : '' ?> value="active">Active</option>
             <option <?= $status === "inactive" ? "selected" : '' ?> value="inactive">Inactive</option>
         </select>
-    </p>
-    <button class="btn update-btn" type="submit">Обновить</button>
+        <div class="invalid-feedback"></div>
+    </div>
+    <button class="btn btn-primary update-btn" type="submit">Update</button>
 </form>
