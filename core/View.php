@@ -1,14 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
-// namespace Core;
+namespace core;
+
 class View
 {
-	function render(string $content, string $template)
-	{	
-		$file = 'views/'.$template;
-		if(file_exists($file)) {
-			include $file;
-		}
-	}
+    public function render(string $content, string $template, array $data = null): void
+    {
+        if (isset($data)) {
+            extract($data);
+        }
+        $file = 'views/' . $template;
+        if (file_exists($file)) {
+            include_once $file;
+        }
+    }
 }

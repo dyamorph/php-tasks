@@ -1,10 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
-// namespace Core;
-class Model {
-	public function get()
-    {
+namespace core;
 
+use db\DB;
+class Model
+{
+    public DB $db;
+
+    public function __construct()
+    {
+        $this->db = new DB();
     }
 }
