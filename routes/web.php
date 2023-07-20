@@ -2,8 +2,8 @@
 
 return [
     'GET'  => [
-        '/users/new'       => ['user', 'new'],
-        '/users'           => ['user', 'index'],
+        '/users/new'       => ['user', 'index'],
+        '/users'           => ['user', 'show'],
         '/users/edit/{id}' => ['user', 'edit']
     ],
     'POST' => [

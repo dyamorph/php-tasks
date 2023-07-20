@@ -31,8 +31,8 @@ class Router
         if ($method === "GET") {
             foreach ($this->routes['GET'] as $uriPattern => $path) {
                 $uriArray = explode('/', $uri);
-
-                if (isset($uriArray[2])
+                if (
+                    isset($uriArray[2])
                     && preg_match("~/users/edit/\d*\?$~", $uri)
                     && preg_match("~\d*\?~", $uriArray[3])
                 ) {

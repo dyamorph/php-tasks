@@ -32,5 +32,4 @@ class Request
 
         return $data;
     }
-
 }

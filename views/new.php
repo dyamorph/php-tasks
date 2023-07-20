@@ -49,12 +49,14 @@
             <option value="" selected disabled>Select gender:</option>
             <option
                 <?php
-                if (isset($data[0]['gender'])): echo 'selected'; endif ?>
+                if (isset($data[0]['gender'])) : echo 'selected';
+                endif ?>
                     value="male">Male
             </option>
             <option
                 <?php
-                if (isset($data[0]['gender'])): echo 'selected'; endif ?>
+                if (isset($data[0]['gender'])) : echo 'selected';
+                endif ?>
                     value="female">Female
             </option>
         </select>
@@ -78,12 +80,14 @@
             <option value="" selected disabled>Select status:</option>
             <option
                 <?php
-                if (isset($data[0]['status'])): echo 'selected'; endif ?>
+                if (isset($data[0]['status'])) : echo 'selected';
+                endif ?>
                     value="active">Active
             </option>
             <option
                 <?php
-                if (isset($data[0]['status'])):echo 'selected'; endif ?>
+                if (isset($data[0]['status'])) : echo 'selected';
+                endif ?>
                     value="inactive">Inactive
             </option>
         </select>
