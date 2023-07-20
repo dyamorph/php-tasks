@@ -1,4 +1,4 @@
-const deleteBtns = document.querySelectorAll(".users-table-delete-btn");
+const deleteBtns = document.querySelectorAll(".delete-btn");
 const deleteForms = document.querySelectorAll("#delete");
 const userForm = document.querySelector(".user-form");
 const updateForm = document.querySelector(".update-form");
@@ -23,26 +23,27 @@ function validate(form) {
 
     function removeErrors(input) {
         const parent = input.parentElement;
-        if (input.classList.contains('error-input')) {
-            input.classList.remove('error-input');
-            parent.querySelector('.error-message').remove();
+        if (input.classList.contains("is-invalid")) {
+            input.classList.remove("is-invalid");
+            parent.querySelector(".error-message").remove();
         }
     }
 
     function createError(input, text) {
         const parent = input.parentElement;
-        const errorMessage = document.createElement('span');
-        input.classList.add('error-input');
-        errorMessage.classList.add('error-message');
+        const invalidFeedback = parent.querySelector(".invalid-feedback");
+        const errorMessage = document.createElement("p");
+        input.classList.add("is-invalid");
+        errorMessage.classList.add("error-message");
         errorMessage.textContent = text;
-        parent.appendChild(errorMessage);
+        invalidFeedback.appendChild(errorMessage);
+        parent.appendChild(invalidFeedback);
     }
 
     let result = true;
 
     const inputs = document.querySelectorAll('.form-input');
     const selects = document.querySelectorAll('.select-input')
-    console.log(inputs);
 
     for (let input of inputs) {
         removeErrors(input);
