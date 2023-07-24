@@ -1,1 +1,1 @@
-<a class="btn btn-primary" href="/users/new">Добавить пользователя</a>
+<a class="btn btn-primary" href="/users/new">Add user</a>

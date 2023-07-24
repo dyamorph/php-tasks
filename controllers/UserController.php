@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function index(): void
     {
-        $this->view->render('new.php', 'template.php');
+        $this->view->render('new', 'template');
     }
 
     public function create(): void
@@ -34,8 +34,8 @@ class UserController extends Controller
         $this->userValidator->loadData($data);
         if (!$this->userValidator->validate()) {
             $this->view->render(
-                'new.php',
-                'template.php',
+                'new',
+                'template',
                 [$data, $this->userValidator->errors]
             );
         } else {
@@ -55,11 +55,24 @@ class UserController extends Controller
 
     public function show(): void
     {
-        $results = $this->userModel->getAll('users');
+        $results = $this->userModel->getAll('users', '*');
+        $totalUsers = count($results);
+        $limit = 10;
+        $offset = 0;
+        $pages = ceil($totalUsers / $limit);
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'] - 1;
+            $offset = $page * $limit;
+        }
+        $limitResults = $this->userModel->getWithLimit('users', "*", $limit, $offset);
         $this->view->render(
-            'show.php',
-            'template.php',
-            ['results' => $results]
+            'show',
+            'template',
+            [
+                'results'    => $limitResults,
+                'totalUsers' => $totalUsers,
+                'pages'      => $pages,
+            ]
         );
     }
 
@@ -73,10 +86,10 @@ class UserController extends Controller
 
     public function edit(string $id): void
     {
-        $results = $this->userModel->getOne('users', ['id', 'name', 'email', 'gender', 'status'], 'id', $id);
+        $results = $this->userModel->getOne('users', ['*'], 'id', $id);
         $this->view->render(
-            'edit.php',
-            'template.php',
+            'edit',
+            'template',
             [
                 'id'     => $results[0]['id'],
                 'name'   => $results[0]['name'],
@@ -103,6 +116,8 @@ class UserController extends Controller
             'id',
             $id
         );
-        header("Location: /users");
+        $page = round($id / 10);
+        $location = "Location: /users?page=$page";
+        header($location);
     }
 }

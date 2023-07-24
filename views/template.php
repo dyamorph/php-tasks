@@ -39,7 +39,7 @@
         <div class="container">
             <div class="main-content">
                 <?php
-                include 'views/' . $content; ?>
+                include 'views/' . $content . '.php'; ?>
             </div>
         </div>
     </main>

@@ -36,18 +36,23 @@ class Database
 
     public function get(
         $table,
-        $fields = [],
+        $fields = null,
         $where = null,
-        $whereData = null
+        $whereData = null,
+        $limit = null,
+        $offset = null
     ): array | bool | null {
-        if (empty($fields)) {
-            $sql = "SELECT * FROM $table";
-        } elseif (isset($where)) {
-            $sql = sprintf("SELECT %s FROM %s WHERE %s = %s", implode(',', $fields), $table, $where, $whereData);
-        } else {
-            $sql = sprintf("SELECT %s FROM %s", implode(',', $fields), $table);
+        if (!empty($limit)) {
+            $sql = sprintf("SELECT %s FROM %s LIMIT %d OFFSET %d", $fields, $table, $limit, $offset);
+            return $this->query($sql);
         }
 
+        if (!empty($where)) {
+            $sql = sprintf("SELECT %s FROM %s WHERE %s = %s", implode(', ', $fields), $table, $where, $whereData);
+            return $this->query($sql);
+        }
+
+        $sql = "SELECT $fields FROM $table";
         return $this->query($sql);
     }
 

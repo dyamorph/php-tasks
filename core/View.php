@@ -11,7 +11,7 @@ class View
         if (isset($data)) {
             extract($data);
         }
-        $file = 'views/' . $template;
+        $file = 'views/' . $template . '.php';
         if (file_exists($file)) {
             include_once $file;
         }
