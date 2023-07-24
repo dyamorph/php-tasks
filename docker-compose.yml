@@ -19,7 +19,7 @@ services:
     mysql:
         image: mysql:8
         ports:
-            - "3037:3036"
+            - "3306:3306"
         restart: unless-stopped
         volumes:
             - mysqldata:/var/lib/mysql

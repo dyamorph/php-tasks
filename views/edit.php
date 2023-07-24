@@ -19,7 +19,7 @@
         <label for="gender">Gender</label>
         <select id="gender" class="form-control" name="gender" data-gender="gender">
             <option <?= $gender === "male" ? "selected" : '' ?> value="male">Male</option>
-            <option <?= $gender === "female" ? "selected" : '' ?>value="female">Female</option>
+            <option <?= $gender === "female" ? "selected" : '' ?> value="female">Female</option>
         </select>
         <div class="invalid-feedback"></div>
     </div>

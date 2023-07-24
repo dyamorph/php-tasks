@@ -23,7 +23,7 @@ class UserController extends Controller
         $this->userValidator = new UserValidator();
     }
 
-    public function new(): void
+    public function index(): void
     {
         $this->view->render('new.php', 'template.php');
     }
@@ -53,7 +53,7 @@ class UserController extends Controller
         }
     }
 
-    public function index(): void
+    public function show(): void
     {
         $results = $this->userModel->getAll('users');
         $this->view->render(
@@ -65,13 +65,15 @@ class UserController extends Controller
 
     public function delete(string $id): void
     {
-        $this->userModel->delete('users', $id);
-        header("Location: /users");
+        if ($this->userModel->delete('users', $id) === true) {
+            header("Location: /users");
+        }
+        echo 'Error while deleting';
     }
 
     public function edit(string $id): void
     {
-        $results = $this->userModel->getOne('users', [], 'users.id', $id);
+        $results = $this->userModel->getOne('users', ['id', 'name', 'email', 'gender', 'status'], 'id', $id);
         $this->view->render(
             'edit.php',
             'template.php',
@@ -87,18 +89,18 @@ class UserController extends Controller
 
     public function update(string $id): void
     {
-        $data = $this->request->getBody();
+        $request = $this->request->getBody();
 
-        $name = $data['name'];
-        $email = $data['email'];
-        $gender = $data['gender'];
-        $status = $data['status'];
+        $name = $request['name'];
+        $email = $request['email'];
+        $gender = $request['gender'];
+        $status = $request['status'];
 
         $this->userModel->update(
             'users',
             ['name', 'email', 'gender', 'status'],
             [$name, $email, $gender, $status],
-            'users.id',
+            'id',
             $id
         );
         header("Location: /users");
