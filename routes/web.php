@@ -9,6 +9,7 @@ return [
     'POST' => [
         '/users/create'      => ['user', 'create'],
         '/users/update/{id}' => ['user', 'update'],
-        '/users/{id}'        => ['user', 'delete']
+        '/users/{id}'        => ['user', 'delete'],
+        '/users/delete'      => ['user', 'deleteSome'],
     ]
 ];
