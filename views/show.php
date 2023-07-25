@@ -1,5 +1,5 @@
-<div class="table-responsive mt-5 mb-5">
-    <p class="h5 mb-5 pl-1">Total users: <?= count($results) ?></p>
+<div class="table-responsive mt-5">
+    <p class="h5 mb-5 pl-1">Total users: <?= $totalUsers ?? '' ?></p>
     <table class="table table-hover">
         <thead class="thead-light">
         <tr>
@@ -26,8 +26,10 @@
                     </form>
                 </td>
                 <td>
-                    <form data-id="<?= $result['id'] ?>" id="delete" method="POST" action="/users/<?= $result['id'] ?>">
-                        <button data-id="<?= $result['id'] ?>" type="submit" class="btn btn-danger delete-btn">Delete
+                    <form data-id="<?= $result['id'] ?>" id="delete" method="POST"
+                          action="/users/<?= $result['id'] ?>">
+                        <button data-id="<?= $result['id'] ?>" type="submit" class="btn btn-danger delete-btn">
+                            Delete
                         </button>
                     </form>
                 </td>
@@ -35,4 +37,15 @@
         <?php
         endforeach ?>
     </table>
+    <nav class="" aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            <?php
+            for ($i = 0; $i < $pages; $i++) : ?>
+                <li class="page-item" data-page="<?= $i + 1 ?>">
+                    <a class="page-link" href=" ?page=<?= $i + 1 ?>"><?= $i + 1 ?></a>
+                </li>
+            <?php
+            endfor; ?>
+        </ul>
+    </nav>
 </div>

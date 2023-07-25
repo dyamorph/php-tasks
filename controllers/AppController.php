@@ -10,6 +10,6 @@ class AppController extends Controller
 {
     public function index(): void
     {
-        $this->view->render('index.php', 'template.php');
+        $this->view->render('index', 'template');
     }
 }

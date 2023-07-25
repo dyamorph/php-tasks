@@ -13,14 +13,19 @@ class Model
         $this->database = Database::getInstance();
     }
 
-    public function getAll($table): array | bool | null
+    public function getAll($table, $fields): array | bool | null
     {
-        return $this->database->get($table);
+        return $this->database->get($table, $fields, null, null, null, null);
     }
 
     public function getOne($table, $fields, $where, $whereData): array | bool | null
     {
-        return $this->database->get($table, $fields, $where, $whereData);
+        return $this->database->get($table, $fields, $where, $whereData, null, null);
+    }
+
+    public function getWithLimit($table, $fields, $startLimit, $offset): array | bool | null
+    {
+        return $this->database->get($table, $fields, null, null, $startLimit, $offset);
     }
 
     public function delete($table, $id): array | bool | null

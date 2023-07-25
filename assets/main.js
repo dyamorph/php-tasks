@@ -4,6 +4,19 @@ const userForm = document.querySelector(".user-form");
 const updateForm = document.querySelector(".update-form");
 const submitUserForm = document.querySelector(".submit-btn");
 const updateUserForm = document.querySelector(".update-btn");
+const paginationItems = document.querySelectorAll(".page-item");
+
+
+const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+});
+const page = params.page;
+
+if (page === null) {
+    paginationItems[0].classList.add('active')
+} else {
+    paginationItems[page - 1].classList.add('active')
+}
 
 deleteBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -18,6 +31,7 @@ deleteBtns.forEach((btn) => {
         });
     });
 });
+
 
 function validate(form) {
 

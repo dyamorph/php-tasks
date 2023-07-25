@@ -8,6 +8,7 @@
   </component>
   <component name="PHPCodeSnifferOptionsConfiguration">
     <option name="codingStandard" value="PSR12" />
+    <option name="extensions" value="php" />
     <option name="highlightLevel" value="WARNING" />
     <option name="installedPaths" value="$USER_HOME$/.composer/vendor/squizlabs/php_codesniffer" />
     <option name="transferred" value="true" />
