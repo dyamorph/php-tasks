@@ -64,12 +64,20 @@ class Router
                     $controllerObject->delete($id);
                     break;
                 }
+
                 if (isset($uriArray[2]) && preg_match("~users/update/\d*$~", $uri)) {
                     $id = $uriArray[3];
                     $controllerObject = new UserController();
                     $controllerObject->update($id);
                     break;
                 }
+
+                if (isset($uriArray[2]) && preg_match("~users/delete~", $uri)) {
+                    $controllerObject = new UserController();
+                    $controllerObject->deleteSome();
+                    break;
+                }
+
                 if (preg_match("~$uriPattern~", $uri)) {
                     if ($path[0] === 'user') {
                         $controllerObject = new UserController();

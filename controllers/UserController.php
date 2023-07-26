@@ -7,6 +7,7 @@ namespace controllers;
 use app\UserValidator;
 use core\Controller;
 use core\Request;
+use core\Response;
 use models\UserModel;
 
 class UserController extends Controller
@@ -14,6 +15,7 @@ class UserController extends Controller
     public UserModel $userModel;
     public Request $request;
     public UserValidator $userValidator;
+    public Response $response;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class UserController extends Controller
         $this->userModel = new UserModel();
         $this->request = new Request();
         $this->userValidator = new UserValidator();
+        $this->response = new Response();
     }
 
     public function index(): void
@@ -49,7 +52,7 @@ class UserController extends Controller
                 ['name', 'email', 'gender', 'status'],
                 [$name, $email, $gender, $status]
             );
-            header("Location: /users");
+            $this->response->redirect("/users");
         }
     }
 
@@ -79,9 +82,21 @@ class UserController extends Controller
     public function delete(string $id): void
     {
         if ($this->userModel->delete('users', $id) === true) {
-            header("Location: /users");
+            $this->response->redirect('/users');
+        } else {
+            $this->response->message('Error while deleting');
         }
-        echo 'Error while deleting';
+    }
+
+    public function deleteSome(): void
+    {
+        $data = $this->request->getBody();
+        foreach ($data['ids'] as $id) {
+            if ($this->userModel->delete('users', $id) !== true) {
+                $this->response->message('Error while deleting');
+            }
+        }
+        $this->response->redirect('/users');
     }
 
     public function edit(string $id): void
@@ -116,8 +131,6 @@ class UserController extends Controller
             'id',
             $id
         );
-        $page = round($id / 10);
-        $location = "Location: /users?page=$page";
-        header($location);
+        $this->response->redirect('/users');
     }
 }

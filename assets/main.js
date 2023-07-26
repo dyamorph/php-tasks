@@ -6,7 +6,6 @@ const submitUserForm = document.querySelector(".submit-btn");
 const updateUserForm = document.querySelector(".update-btn");
 const paginationItems = document.querySelectorAll(".page-item");
 
-
 const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
@@ -31,7 +30,6 @@ deleteBtns.forEach((btn) => {
         });
     });
 });
-
 
 function validate(form) {
 
@@ -112,4 +110,24 @@ if (updateUserForm) {
     })
 }
 
+const $tableCheckboxes = $(".table-checkbox");
+const $deleteAllBtn = $(".delete-all-btn").hide();
+const $checkAll = $(".check-all");
 
+$deleteAllBtn.click(function (e) {
+    e.preventDefault();
+    const $conf = window.confirm("Remove users?");
+    const $tableForm = $('.table-form');
+    if ($conf) {
+        $tableForm.submit();
+    }
+})
+
+$tableCheckboxes.change(function () {
+    $deleteAllBtn.toggle($tableCheckboxes.is(':checked'))
+})
+
+$checkAll.click(function () {
+    $deleteAllBtn.toggle($checkAll.is(':checked'))
+    $tableCheckboxes.not(this).prop('checked', this.checked);
+});
