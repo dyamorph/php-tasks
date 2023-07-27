@@ -11,11 +11,14 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 });
 const page = params.page;
 
-if (page === null) {
-    paginationItems[0].classList.add('active')
-} else {
-    paginationItems[page - 1].classList.add('active')
+if (paginationItems.length > 0) {
+    if (page === null) {
+        paginationItems[0].classList.add('active')
+    } else {
+        paginationItems[page - 1].classList.add('active')
+    }
 }
+
 
 deleteBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -131,3 +134,4 @@ $checkAll.click(function () {
     $deleteAllBtn.toggle($checkAll.is(':checked'))
     $tableCheckboxes.not(this).prop('checked', this.checked);
 });
+

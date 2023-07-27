@@ -1,0 +1,12 @@
+{
+  "name": "dyamorph/php-tasks",
+  "require": {
+    "twig/twig": "^3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "router\\": "router/",
+      "app\\": "app/"
+    }
+  }
+}

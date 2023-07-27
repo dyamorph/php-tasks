@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace controllers;
+namespace app\controllers;
 
+use app\core\Controller;
+use app\core\Request;
+use app\core\Response;
+use app\models\UserModel;
 use app\UserValidator;
-use core\Controller;
-use core\Request;
-use core\Response;
-use models\UserModel;
 
 class UserController extends Controller
 {
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index(): void
     {
-        $this->view->render('new', 'template');
+        echo $this->view->render('new.twig');
     }
 
     public function create(): void
@@ -36,10 +36,12 @@ class UserController extends Controller
         $data = $this->request->getBody();
         $this->userValidator->loadData($data);
         if (!$this->userValidator->validate()) {
-            $this->view->render(
-                'new',
-                'template',
-                [$data, $this->userValidator->errors]
+            echo $this->view->render(
+                'new.twig',
+                [
+                    'data'   => $data,
+                    'errors' => $this->userValidator->errors
+                ]
             );
         } else {
             $name = $data['name'];
@@ -68,9 +70,8 @@ class UserController extends Controller
             $offset = $page * $limit;
         }
         $limitResults = $this->userModel->getWithLimit('users', "*", $limit, $offset);
-        $this->view->render(
-            'show',
-            'template',
+        echo $this->view->render(
+            'show.twig',
             [
                 'results'    => $limitResults,
                 'totalUsers' => $totalUsers,
@@ -102,9 +103,8 @@ class UserController extends Controller
     public function edit(string $id): void
     {
         $results = $this->userModel->getOne('users', ['*'], 'id', $id);
-        $this->view->render(
-            'edit',
-            'template',
+        echo $this->view->render(
+            'edit.twig',
             [
                 'id'     => $results[0]['id'],
                 'name'   => $results[0]['name'],

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace router;
 
-use controllers\AppController;
-use controllers\UserController;
-use core\Request;
+use app\controllers\AppController;
+use app\controllers\UserController;
+use app\core\Request;
 
 class Router
 {
@@ -32,10 +32,10 @@ class Router
             foreach ($this->routes['GET'] as $uriPattern => $path) {
                 $uriArray = explode('/', $uri);
                 if (isset($uriArray[2])
-                    && preg_match("~/users/edit/\d*\?$~", $uri)
-                    && preg_match("~\d*\?~", $uriArray[3])
+                    && preg_match("~/users/edit/\d*$~", $uri)
+                    && preg_match("~\d*~", $uriArray[3])
                 ) {
-                    $id = rtrim($uriArray[3], '?');
+                    $id = $uriArray[3];
                     $controllerObject = new UserController();
                     $controllerObject->edit($id);
                     break;
@@ -47,10 +47,8 @@ class Router
                     }
                     $actionName = $path[1];
                     if (isset($controllerObject)) {
-                        $result = $controllerObject->$actionName();
-                        if ($result !== null) {
-                            break;
-                        }
+                        $controllerObject->$actionName();
+                        break;
                     }
                 }
             }
