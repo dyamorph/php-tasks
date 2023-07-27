@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace controllers;
+namespace app\controllers;
 
-use core\Controller;
+use app\core\Controller;
 
 class AppController extends Controller
 {
     public function index(): void
     {
-        $this->view->render('index', 'template');
+        echo $this->view->render('index.twig');
     }
 }

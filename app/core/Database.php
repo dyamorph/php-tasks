@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace core;
+namespace app\core;
 
 class Database
 {
@@ -12,7 +12,7 @@ class Database
 
     public function __construct()
     {
-        $dbConfig = __DIR__ . '/../config/DB.php';
+        $dbConfig = __DIR__ . '/../../config/DB.php';
         $this->db = include($dbConfig);
         $this->mysqli = new \mysqli(
             $this->db['DB_HOST'],

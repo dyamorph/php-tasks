@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace core;
+namespace app\core;
 
 class Controller
 {

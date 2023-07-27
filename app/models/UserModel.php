@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace models;
+namespace app\models;
 
-use core\Model;
+use app\core\Model;
 
 class UserModel extends Model
 {
