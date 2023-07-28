@@ -60,16 +60,27 @@ class UserController extends Controller
 
     public function show(): void
     {
-        $results = $this->userModel->getAll('users', '*');
-        $totalUsers = count($results);
-        $limit = 10;
-        $offset = 0;
-        $pages = ceil($totalUsers / $limit);
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'] - 1;
-            $offset = $page * $limit;
+        $session = $this->request->getSession();
+        if ($session['data-source'] === 'local') {
+            $results = $this->userModel->getAll('users', '*');
+            $totalUsers = count($results);
+            $limit = 10;
+            $offset = 0;
+            $pages = ceil($totalUsers / $limit);
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'] - 1;
+                $offset = $page * $limit;
+            }
+            $limitResults = $this->userModel->getWithLimitFromDatabase('users', "*", $limit, $offset);
+        } else {
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+            } else {
+                $page = 1;
+            }
+            [$limitResults, $totalUsers] = $this->userModel->getWithLimitFromAPI($page, 10);
+            $pages = ceil($totalUsers / 10);
         }
-        $limitResults = $this->userModel->getWithLimit('users', "*", $limit, $offset);
         echo $this->view->render(
             'show.twig',
             [
@@ -82,7 +93,7 @@ class UserController extends Controller
 
     public function delete(string $id): void
     {
-        if ($this->userModel->delete('users', $id) === true) {
+        if ($this->userModel->delete('users', $id)) {
             $this->response->redirect('/users');
         } else {
             $this->response->message('Error while deleting');
@@ -93,11 +104,11 @@ class UserController extends Controller
     {
         $data = $this->request->getBody();
         foreach ($data['ids'] as $id) {
-            if ($this->userModel->delete('users', $id) !== true) {
-                $this->response->message('Error while deleting');
+            if ($this->userModel->delete('users', $id)) {
+                $this->response->redirect('/users');
             }
         }
-        $this->response->redirect('/users');
+        $this->response->message('Error while deleting');
     }
 
     public function edit(string $id): void

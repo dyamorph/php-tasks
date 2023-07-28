@@ -14,6 +14,11 @@ class Request
         return $_SERVER['REQUEST_METHOD'];
     }
 
+    public function getSession(): array
+    {
+        return $_SESSION;
+    }
+
     public function getBody(): array
     {
         $data = [];
