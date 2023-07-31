@@ -20,17 +20,22 @@ class Model
         return $this->database->get($table, $fields, null, null, null, null);
     }
 
-    public function getOne($table, $fields, $where, $whereData): array | bool | null
+    public function getOneFromDatabase($table, $fields, $where, $whereData): array | bool | null
+    {
+        return $this->database->get($table, $fields, $where, $whereData, null, null);
+    }
+
+    public function getOneFromAPI($id): array
     {
         $session = $this->request->getSession();
         if ($session['data-source'] === 'gorest') {
-            $url = "https://gorest.co.in/public/v2/users";
+            $url = "https://gorest.co.in/public/v2/users/$id";
 
-            $headers = array(
+            $headers = [
                 "Accept: application/json",
                 "Content-Type: application/json",
-                "Authorization: Bearer c2e2d7605c4426899877055782f9bc4be953851de101c6b9277dfdb66d717eb7"
-            );
+                "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe"
+            ];
 
             $ch = curl_init();
 
@@ -46,9 +51,8 @@ class Model
                 $data = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
             }
             curl_close($ch);
-        } else {
-            $data = $this->database->get($table, $fields, $where, $whereData, null, null);
         }
+
         return $data;
     }
 
@@ -57,16 +61,16 @@ class Model
         return $this->database->get($table, $fields, null, null, $startLimit, $offset);
     }
 
-    public function getWithLimitFromAPI($page, $perPage)
+    public function getWithLimitFromAPI($page, $perPage): array
     {
         $url = "https://gorest.co.in/public/v2/users?page=$page&per_page=$perPage";
 
-        $headers = array(
+        $headers = [
             "Accept: application/json",
             "Content-Type: application/json",
-            "Authorization: Bearer c2e2d7605c4426899877055782f9bc4be953851de101c6b9277dfdb66d717eb7",
-            "X-Pagination-Total: 100",
-        );
+            "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe",
+            "X-Pagination-Total: 30"
+        ];
 
         $ch = curl_init();
 
@@ -82,35 +86,47 @@ class Model
         } else {
             $data = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
             $responseHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
-            $totalUsers = $this->getHeader($responseHeaders, 'X-Pagination-Total');
+            $totalUsers = $this->request->getHeader($responseHeaders, 'X-Pagination-Total');
         }
         curl_close($ch);
+
         return [$data, $totalUsers];
     }
 
-    public function getHeader($headers, $headerName): ?string
-    {
-        $headersArray = explode("\r\n", $headers);
-        foreach ($headersArray as $header) {
-            $headerParts = explode(':', $header, 2);
-            if (count($headerParts) === 2 && strtolower(trim($headerParts[0])) === strtolower($headerName)) {
-                return trim($headerParts[1]);
-            }
-        }
-        return null;
-    }
-
-//    public function getWithLimit($table, $fields, $startLimit, $offset): array | bool | null
-//    {
-//        $session = $this->request->getSession();
-//    }
-
-    public function delete($table, $id): array | bool | null
+    public function deleteFromDatabase($table, $id): array | bool | null
     {
         return $this->database->delete($table, $id);
     }
 
-    public function update(
+    public function deleteFromAPI($id): string
+    {
+        $url = "https://gorest.co.in/public/v2/users/$id";
+
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe"
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+        curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $response =  "cURL Error: " . curl_error($ch);
+        } else {
+            $response = "User deleted successfully";
+        }
+        curl_close($ch);
+
+        return $response;
+    }
+
+    public function updateFromDatabase(
         $table,
         $fields,
         $values,
@@ -120,8 +136,66 @@ class Model
         return $this->database->update($table, $fields, $values, $where, $whereData);
     }
 
-    public function set($table, $fields, $values): array | bool | null
+    public function updateFromAPI($data, $id): string
+    {
+        $url = "https://gorest.co.in/public/v2/users/$id";
+
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe"
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
+
+        curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $response =  "cURL Error: " . curl_error($ch);
+        } else {
+            $response = "User updated successfully";
+        }
+        curl_close($ch);
+
+        return $response;
+    }
+
+    public function setToDatabase($table, $fields, $values): array | bool | null
     {
         return $this->database->set($table, $fields, $values);
+    }
+
+    public function setToAPI($data): string
+    {
+        $url = "https://gorest.co.in/public/v2/users";
+
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe"
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
+
+        curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $response =  "cURL Error: " . curl_error($ch);
+        } else {
+            $response = "User updated successfully";
+        }
+        curl_close($ch);
+
+        return $response;
     }
 }

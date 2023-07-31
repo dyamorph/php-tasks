@@ -33,29 +33,33 @@ class UserController extends Controller
 
     public function create(): void
     {
+        $session = $this->request->getSession();
         $data = $this->request->getBody();
         $this->userValidator->loadData($data);
         if (!$this->userValidator->validate()) {
             echo $this->view->render(
                 'new.twig',
                 [
-                    'data'   => $data,
+                    'data' => $data,
                     'errors' => $this->userValidator->errors
                 ]
             );
-        } else {
+        }
+        if ($session['data-source'] === 'local') {
             $name = $data['name'];
             $email = $data['email'];
             $gender = $data['gender'];
             $status = $data['status'];
 
-            $this->userModel->set(
+            $this->userModel->setToDatabase(
                 'users',
                 ['name', 'email', 'gender', 'status'],
                 [$name, $email, $gender, $status]
             );
-            $this->response->redirect("/users");
+        } else {
+            $this->userModel->setToAPI($data);
         }
+        $this->response->redirect("/users");
     }
 
     public function show(): void
@@ -73,13 +77,10 @@ class UserController extends Controller
             }
             $limitResults = $this->userModel->getWithLimitFromDatabase('users', "*", $limit, $offset);
         } else {
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-            } else {
-                $page = 1;
-            }
-            [$limitResults, $totalUsers] = $this->userModel->getWithLimitFromAPI($page, 10);
-            $pages = ceil($totalUsers / 10);
+            $page = $_GET['page'] ?? 1;
+            $perPage = 10;
+            [$limitResults, $totalUsers] = $this->userModel->getWithLimitFromAPI($page, $perPage);
+            $pages = ceil($totalUsers / $perPage);
         }
         echo $this->view->render(
             'show.twig',
@@ -93,55 +94,90 @@ class UserController extends Controller
 
     public function delete(string $id): void
     {
-        if ($this->userModel->delete('users', $id)) {
-            $this->response->redirect('/users');
+        $session = $this->request->getSession();
+        if ($session['data-source'] === 'local') {
+            if ($this->userModel->deleteFromDatabase('users', $id)) {
+                $this->response->redirect('/users');
+            } else {
+                $this->response->message('Error while deleting');
+            }
         } else {
-            $this->response->message('Error while deleting');
+            $this->userModel->deleteFromAPI($id);
+            $this->response->redirect('/users');
         }
     }
 
     public function deleteSome(): void
     {
+        $session = $this->request->getSession();
         $data = $this->request->getBody();
-        foreach ($data['ids'] as $id) {
-            if ($this->userModel->delete('users', $id)) {
-                $this->response->redirect('/users');
+        if ($session['data-source'] === 'local') {
+            foreach ($data['ids'] as $id) {
+                if ($this->userModel->deleteFromDatabase('users', $id)) {
+                    $this->response->redirect('/users');
+                }
             }
+            $this->response->message('Error while deleting');
+        } else {
+            foreach ($data['ids'] as $id) {
+                if ($this->userModel->deleteFromAPI($id)) {
+                    $this->response->redirect('/users');
+                }
+            }
+            $this->response->redirect('/users');
         }
-        $this->response->message('Error while deleting');
     }
 
     public function edit(string $id): void
     {
-        $results = $this->userModel->getOne('users', ['*'], 'id', $id);
-        echo $this->view->render(
-            'edit.twig',
-            [
-                'id'     => $results[0]['id'],
-                'name'   => $results[0]['name'],
-                'email'  => $results[0]['email'],
-                'gender' => $results[0]['gender'],
-                'status' => $results[0]['status']
-            ]
-        );
+        $session = $this->request->getSession();
+        if ($session['data-source'] === 'local') {
+            $results = $this->userModel->getOneFromDatabase('users', ['*'], 'id', $id);
+            echo $this->view->render(
+                'edit.twig',
+                [
+                    'id'     => $results[0]['id'],
+                    'name'   => $results[0]['name'],
+                    'email'  => $results[0]['email'],
+                    'gender' => $results[0]['gender'],
+                    'status' => $results[0]['status']
+                ]
+            );
+        } else {
+            $results = $this->userModel->getOneFromAPI($id);
+            echo $this->view->render(
+                'edit.twig',
+                [
+                    'id'     => $results['id'],
+                    'name'   => $results['name'],
+                    'email'  => $results['email'],
+                    'gender' => $results['gender'],
+                    'status' => $results['status']
+                ]
+            );
+        }
     }
 
     public function update(string $id): void
     {
+        $session = $this->request->getSession();
         $request = $this->request->getBody();
+        if ($session['data-source'] === 'local') {
+            $name = $request['name'];
+            $email = $request['email'];
+            $gender = $request['gender'];
+            $status = $request['status'];
 
-        $name = $request['name'];
-        $email = $request['email'];
-        $gender = $request['gender'];
-        $status = $request['status'];
-
-        $this->userModel->update(
-            'users',
-            ['name', 'email', 'gender', 'status'],
-            [$name, $email, $gender, $status],
-            'id',
-            $id
-        );
+            $this->userModel->updateFromDatabase(
+                'users',
+                ['name', 'email', 'gender', 'status'],
+                [$name, $email, $gender, $status],
+                'id',
+                $id
+            );
+        } else {
+            $this->userModel->updateFromAPI($request, $id);
+        }
         $this->response->redirect('/users');
     }
 }

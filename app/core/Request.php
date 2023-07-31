@@ -37,4 +37,16 @@ class Request
 
         return $data;
     }
+
+    public function getHeader($headers, $headerName): ?string
+    {
+        $headersArray = explode("\r\n", $headers);
+        foreach ($headersArray as $header) {
+            $headerParts = explode(':', $header, 2);
+            if (count($headerParts) === 2 && strtolower(trim($headerParts[0])) === strtolower($headerName)) {
+                return trim($headerParts[1]);
+            }
+        }
+        return null;
+    }
 }

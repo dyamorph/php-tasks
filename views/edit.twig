@@ -1,5 +1,9 @@
 {% extends 'layout/base.twig' %}
 
+{% block title %}
+    Edit user info
+{% endblock %}
+
 {% block content %}
     <form class="update-form col-sm-12 col-md-12 col-lg-6 py-5" action="/users/update/{{ id }}" method="POST">
         <h3 class="h2 mb-5">Update user</h3>
