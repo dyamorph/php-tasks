@@ -15,7 +15,7 @@
                    name="name"
                    placeholder="Enter your first and last name"
                    data-name="name"
-                   value="{{ data['name'] }}">
+                   value="{{ user['name'] }}">
             <div class="invalid-feedback">
                 {% if errors['name'] in errors %}
                     {% for error in errors['name'] %}
@@ -32,7 +32,7 @@
                    name="email"
                    placeholder="Enter your email"
                    data-email="email"
-                   value="{{ data['email'] }}">
+                   value="{{ user['email'] }}">
             <div class="invalid-feedback">
                 {% if errors['email'] in errors %}
                     {% for error in errors['email'] %}
@@ -49,10 +49,10 @@
                     data-gender="gender">
                 <option value="" selected disabled>Select gender:</option>
                 <option
-                        {{ data["gender"] == "male" ? "selected" : "" }} value="male">Male
+                        {{ user["gender"] == "male" ? "selected" : "" }} value="male">Male
                 </option>
                 <option
-                        {{ data["gender"] == "female" ? "selected" : "" }} value="female">Female
+                        {{ user["gender"] == "female" ? "selected" : "" }} value="female">Female
                 </option>
             </select>
             <div class="invalid-feedback">
@@ -71,10 +71,10 @@
                     data-status="status">
                 <option value="" selected disabled>Select status:</option>
                 <option
-                        {{ data["status"] == "active" ? "selected" :"" }} value="active">Active
+                        {{ user["status"] == "active" ? "selected" :"" }} value="active">Active
                 </option>
                 <option
-                        {{ data["status"] == "inactive" ? "selected" :"" }} value="inactive">Inactive
+                        {{ user["status"] == "inactive" ? "selected" :"" }} value="inactive">Inactive
                 </option>
             </select>
             <div class="invalid-feedback">
@@ -87,4 +87,7 @@
         </div>
         <button class="btn btn-primary submit-btn" type="submit">Send</button>
     </form>
+{% endblock %}
+{% block javascript %}
+    <script src="../../assets/js/form-validation.js"></script>
 {% endblock %}

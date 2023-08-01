@@ -10,7 +10,7 @@ class Database
     private \mysqli $mysqli;
     private array $db;
 
-    public function __construct()
+    private function __construct()
     {
         $dbConfig = __DIR__ . '/../../config/DB.php';
         $this->db = include($dbConfig);
@@ -48,7 +48,7 @@ class Database
         }
 
         if (!empty($where)) {
-            $sql = sprintf("SELECT %s FROM %s WHERE %s = %s", implode(', ', $fields), $table, $where, $whereData);
+            $sql = sprintf("SELECT %s FROM %s WHERE %s = %s", $fields, $table, $where, $whereData);
             return $this->query($sql);
         }
 
