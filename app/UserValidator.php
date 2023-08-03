@@ -38,28 +38,36 @@ class UserValidator extends Validator
     {
         foreach ($this->rules() as $field => $rules) {
             $value = $this->{$field};
+
             foreach ($rules as $rule) {
                 $ruleName = $rule;
+
                 if (!is_string($ruleName)) {
                     $ruleName = $rule[0];
                 }
+
                 if ($ruleName === self::RULE_REQUIRED && !$value) {
                     $this->addError($field, self::RULE_REQUIRED);
                 }
+
                 if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     $this->addError($field, self::RULE_EMAIL);
                 }
+
                 if ($ruleName === self::RULE_MIN && (strlen($value) < $rule['min'])) {
                     $this->addError($field, self::RULE_MIN, $rule);
                 }
+
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
                     $this->addError($field, self::RULE_MAX, $rule);
                 }
+
                 if ($ruleName === self::RULE_STRING && !preg_match("~^[a-zA-Z ]*$~", $value)) {
                     $this->addError($field, self::RULE_STRING);
                 }
             }
         }
+
         return empty($this->errors);
     }
 
@@ -69,6 +77,7 @@ class UserValidator extends Validator
         foreach ($params as $key => $value) {
             $message = str_replace("{{$key}}", $value, $message);
         }
+
         $this->errors[$field][] = $message;
     }
 

@@ -7,7 +7,7 @@
 {% block content %}
     <div class="table-responsive mt-5">
         <p class="h5 mb-5 pl-1">Total users: {{ totalUsers }}</p>
-        <form id="delete-all" class="table-form" action="/users/delete" method="POST"></form>
+        <form id="delete-all" class="table-form" action="/users/" method="POST"></form>
         <button form="delete-all" class="btn btn-danger delete-all-btn" type="submit">Delete All</button>
             <table class="table table-hover">
                 <thead class="thead-light">
@@ -25,7 +25,9 @@
                 <tbody>
                     {% for user in users %}
                         <tr>
-                            <td><input class="table-checkbox" type="checkbox" name="ids[]" value="{{ user['id'] }}" form="delete-all"></td>
+                            <td>
+                                <input class="table-checkbox" type="checkbox" name="ids[]" value="{{ user['id'] }}" form="delete-all">
+                            </td>
                             <td>{{ user['id'] }}</td>
                             <td>{{ user['name'] }}</td>
                             <td>{{ user['email'] }}</td>
@@ -37,7 +39,8 @@
                             <td>
                                 <form data-id="{{ user['id'] }}" id="delete" method="POST"
                                       action="/users/{{ user['id'] }}">
-                                    <button data-id="{{ user['id'] }}" type="submit" class="btn btn-danger delete-btn">
+                                    <input type="hidden" name="ids[]" value="{{ user['id'] }}">
+                                    <button data-id="{{ user['id'] }}"  type="submit" class="btn btn-danger delete-btn">
                                         Delete
                                     </button>
                                 </form>

@@ -10,8 +10,8 @@
         <form  method="post" action="">
             <label for="data-source">Data Source:</label>
             <select class="form-control select-input" name="data-source" id="data-source">
-                <option {{ data["data-source"] == "local" ? "selected" : "" }} value="local">Local database</option>
-                <option {{ data["data-source"] == "gorest" ? "selected" : "" }} value="gorest">GoREST REST API</option>
+                <option {{ dataSource == "local" ? "selected" : "" }} value="local">Local database</option>
+                <option {{ dataSource == "gorest" ? "selected" : "" }} value="gorest">GoREST REST API</option>
             </select>
             <button class="btn btn-primary mt-4" type="submit">Set source</button>
         </form>

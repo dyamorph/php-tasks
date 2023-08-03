@@ -10,10 +10,10 @@ class ApiProvider implements IDataProvider
     public array $headers = [
         "Accept: application/json",
         "Content-Type: application/json",
-        "Authorization: Bearer d5d106ddbcf6f9524154a529a9330d7fdc2a6615c9ab50bce1bcc69964273cfe"
+        "Authorization: Bearer dda568d4d8b2186c9f4f55ca709c5a744fb1219112ad5388954a16e11847b863"
     ];
 
-    public function first($id)
+    public function first(string $id): array | string
     {
         $url = $this->baseUrl . "/$id";
 
@@ -25,17 +25,17 @@ class ApiProvider implements IDataProvider
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            echo "cURL Error: " . curl_error($ch);
-        } else {
-            $firstUser = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+            return "cURL Error: " . curl_error($ch);
         }
+
+        $firstUser = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
         curl_close($ch);
 
         return $firstUser;
     }
 
-    public function all()
+    public function all(): array | string
     {
         $url = $this->baseUrl;
 
@@ -48,17 +48,17 @@ class ApiProvider implements IDataProvider
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            echo "cURL Error: " . curl_error($ch);
-        } else {
-            $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+            return "cURL Error: " . curl_error($ch);
         }
+
+        $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
         curl_close($ch);
 
         return $users;
     }
 
-    public function withLimit($limit, $offset, $page)
+    public function withLimit(int $page, int $limit): array | string
     {
         $url = $this->baseUrl . "?page=$page&per_page=$limit";
 
@@ -70,17 +70,17 @@ class ApiProvider implements IDataProvider
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            echo "cURL Error: " . curl_error($ch);
-        } else {
-            $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+            return "cURL Error: " . curl_error($ch);
         }
+
+        $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
         curl_close($ch);
 
         return $users;
     }
 
-    public function create($fields, $values, $data)
+    public function create(array $data): string | bool
     {
         $url = $this->baseUrl;
 
@@ -91,12 +91,10 @@ class ApiProvider implements IDataProvider
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
 
-        curl_exec($ch);
+        $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            $response =  "cURL Error: " . curl_error($ch);
-        } else {
-            $response = "User added successfully";
+            return "cURL Error: " . curl_error($ch);
         }
 
         curl_close($ch);
@@ -104,7 +102,7 @@ class ApiProvider implements IDataProvider
         return $response;
     }
 
-    public function update($fields, $values, $where, $whereData, $data, $id)
+    public function update(array $data, string $id): string | bool
     {
         $url = $this->baseUrl . "/$id";
 
@@ -115,12 +113,10 @@ class ApiProvider implements IDataProvider
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
 
-        curl_exec($ch);
+        $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            $response =  "cURL Error: " . curl_error($ch);
-        } else {
-            $response = "User updated successfully";
+            return "cURL Error: " . curl_error($ch);
         }
 
         curl_close($ch);
@@ -128,7 +124,7 @@ class ApiProvider implements IDataProvider
         return $response;
     }
 
-    public function delete($id)
+    public function delete(string $id): string | bool
     {
         $url = $this->baseUrl . "/$id";
 
@@ -138,12 +134,10 @@ class ApiProvider implements IDataProvider
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-        curl_exec($ch);
+        $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            $response =  "cURL Error: " . curl_error($ch);
-        } else {
-            $response = "User deleted successfully";
+            return "cURL Error: " . curl_error($ch);
         }
 
         curl_close($ch);

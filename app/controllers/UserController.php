@@ -7,6 +7,7 @@ namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
+use app\core\Session;
 use app\interfaces\IDataProvider;
 use app\models\User;
 use app\providers\ApiProvider;
@@ -19,12 +20,18 @@ class UserController extends Controller
     public Request $request;
     public UserValidator $userValidator;
     public Response $response;
+    public IDataProvider $provider;
+    public Session $session;
 
     public function __construct()
     {
         parent::__construct();
         $this->request = new Request();
-        $this->user = new User($this->request->getSession()['data-source'] === 'local' ? new DatabaseProvider() : new ApiProvider());
+        $this->session = new Session();
+        $this->provider = $this->session->get('data-source') === 'local'
+            ? new DatabaseProvider()
+            : new ApiProvider();
+        $this->user = new User($this->provider);
         $this->userValidator = new UserValidator();
         $this->response = new Response();
     }
@@ -34,23 +41,14 @@ class UserController extends Controller
         $this->view->render('user/create.twig');
     }
 
-    public function show()
+    public function show(): void
     {
-        $session = $this->request->getSession();
         $request = $this->request->getBody();
         $limit = 10;
 
-        if ($session['data-source'] === 'local') {
-            if (isset($request['page'])) {
-                $page = $request['page'] - 1;
-                $offset = $page * $limit;
-            }
+        $page = $request['page'] - 1;
 
-            $users = $this->user->withLimit($limit, $offset ?? 0, null);
-        } else {
-            $page = $request['page'] ?? 1;
-            $users = $this->user->withLimit($limit, null, $page);
-        }
+        $users = $this->user->withLimit($page, $limit);
 
         $this->view->render(
             '/user/index.twig',
@@ -64,7 +62,6 @@ class UserController extends Controller
 
     public function create(): void
     {
-        $session = $this->request->getSession();
         $request = $this->request->getBody();
         $this->userValidator->loadData($request);
 
@@ -78,41 +75,26 @@ class UserController extends Controller
             );
         }
 
-        if ($session['data-source'] === 'local') {
-            $this->user->create(
-                ['name', 'email', 'gender', 'status'],
-                [$request['name'], $request['email'], $request['gender'], $request['status']],
-                null
-            );
-        } else {
-            $this->user->create(null, null, $request);
-        }
+        $this->user->create($request);
 
         if ($this->userValidator->validate()) {
-            $this->response->redirect('/users');
+            $this->response->redirect('/users?page=1');
         }
     }
 
-    public function delete(string $id): void
-    {
-        if ($this->user->delete($id)) {
-            $this->response->redirect('/users');
-        } else {
-            $this->response->message('Error while deleting');
-        }
-    }
-
-    public function deleteSome(): void
+    public function delete(): void
     {
         $request = $this->request->getBody();
-
-        foreach ($request['ids'] as $id) {
-            if ($this->user->delete($id)) {
-                $this->response->redirect('/users');
-            }
+        $ids = $request['ids'];
+        if (!is_array($ids)) {
+            $ids = [$ids];
         }
 
-        $this->response->message('Error while deleting');
+        foreach ($ids as $id) {
+            $this->user->delete($id);
+        }
+
+        $this->response->redirect('/users?page=1');
     }
 
     public function edit(string $id): void
@@ -133,22 +115,10 @@ class UserController extends Controller
 
     public function update(string $id): void
     {
-        $session = $this->request->getSession();
         $request = $this->request->getBody();
 
-        if ($session['data-source'] === 'local') {
-            $this->user->update(
-                ['name', 'email', 'gender', 'status'],
-                [$request['name'], $request['email'], $request['gender'], $request['status']],
-                'id',
-                $id,
-                null,
-                null
-            );
-        } else {
-            $this->user->update(null, null, null, null, $request, $id);
-        }
+        $this->user->update($request, $id);
 
-        $this->response->redirect('/users');
+        $this->response->redirect('/users?page=1');
     }
 }

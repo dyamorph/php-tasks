@@ -27,19 +27,19 @@ class Model
         return $this->dataProvider->first($id);
     }
 
-    public function withLimit($limit, $offset, $page)
+    public function withLimit($page, $limit)
     {
-        return $this->dataProvider->withLimit($limit, $offset, $page);
+        return $this->dataProvider->withLimit($page, $limit);
     }
 
-    public function create($fields, $values, $data)
+    public function create($data)
     {
-        return $this->dataProvider->create($fields, $values, $data);
+        return $this->dataProvider->create($data);
     }
 
-    public function update($fields, $values, $where, $whereData, $data, $id)
+    public function update($data, $id)
     {
-        return $this->dataProvider->update($fields, $values, $where, $whereData, $data, $id);
+        return $this->dataProvider->update($data, $id);
     }
 
     public function delete($id)
