@@ -1,5 +1,19 @@
 {% extends 'layout/base.twig' %}
 
+{% block title %}
+    Main page
+{% endblock %}
+
 {% block content %}
-    <a class="btn btn-primary" href="/users/new">Add user</a>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <a class="btn btn-primary my-4" href="/users/new">Add user</a>
+        <form  method="post" action="">
+            <label for="data-source">Data Source:</label>
+            <select class="form-control select-input" name="data-source" id="data-source">
+                <option {{ dataSource == "local" ? "selected" : "" }} value="local">Local database</option>
+                <option {{ dataSource == "gorest" ? "selected" : "" }} value="gorest">GoREST REST API</option>
+            </select>
+            <button class="btn btn-primary mt-4" type="submit">Set source</button>
+        </form>
+    </div>
 {% endblock %}

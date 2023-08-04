@@ -1,7 +1,9 @@
 {
   "name": "dyamorph/php-tasks",
   "require": {
-    "twig/twig": "^3.6"
+    "twig/twig": "^3.6",
+    "ext-curl": "*",
+    "ext-mysqli": "*"
   },
   "autoload": {
     "psr-4": {

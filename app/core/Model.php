@@ -4,47 +4,46 @@ declare(strict_types=1);
 
 namespace app\core;
 
+use app\interfaces\IDataProvider;
+
 class Model
 {
-    public Database $database;
+    public Request $request;
+    public IDataProvider $dataProvider;
 
-    public function __construct()
+    public function __construct(IDataProvider $dataProvider)
     {
-        $this->database = Database::getInstance();
+        $this->dataProvider = $dataProvider;
+        $this->request = new Request();
     }
 
-    public function getAll($table, $fields): array | bool | null
+    public function all()
     {
-        return $this->database->get($table, $fields, null, null, null, null);
+        return $this->dataProvider->all();
     }
 
-    public function getOne($table, $fields, $where, $whereData): array | bool | null
+    public function first($id)
     {
-        return $this->database->get($table, $fields, $where, $whereData, null, null);
+        return $this->dataProvider->first($id);
     }
 
-    public function getWithLimit($table, $fields, $startLimit, $offset): array | bool | null
+    public function withLimit($page, $limit)
     {
-        return $this->database->get($table, $fields, null, null, $startLimit, $offset);
+        return $this->dataProvider->withLimit($page, $limit);
     }
 
-    public function delete($table, $id): array | bool | null
+    public function create($data)
     {
-        return $this->database->delete($table, $id);
+        return $this->dataProvider->create($data);
     }
 
-    public function update(
-        $table,
-        $fields,
-        $values,
-        $where,
-        $whereData
-    ): bool | array | null {
-        return $this->database->update($table, $fields, $values, $where, $whereData);
+    public function update($data, $id)
+    {
+        return $this->dataProvider->update($data, $id);
     }
 
-    public function set($table, $fields, $values): array | bool | null
+    public function delete($id)
     {
-        return $this->database->set($table, $fields, $values);
+        return $this->dataProvider->delete($id);
     }
 }

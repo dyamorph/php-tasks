@@ -24,17 +24,16 @@ class Router
     {
         $uri = $this->request->getUri();
         $method = $this->request->getMethod();
+
         if ($uri === '/') {
             $appController = new AppController();
             $appController->index();
         }
+
         if ($method === "GET") {
             foreach ($this->routes['GET'] as $uriPattern => $path) {
                 $uriArray = explode('/', $uri);
-                if (isset($uriArray[2])
-                    && preg_match("~/users/edit/\d*$~", $uri)
-                    && preg_match("~\d*~", $uriArray[3])
-                ) {
+                if (isset($uriArray[2]) && preg_match("~/users/edit/\d*$~", $uri)) {
                     $id = $uriArray[3];
                     $controllerObject = new UserController();
                     $controllerObject->edit($id);
@@ -53,13 +52,13 @@ class Router
                 }
             }
         }
+
         if ($method === "POST") {
             foreach ($this->routes['POST'] as $uriPattern => $path) {
                 $uriArray = explode('/', $uri);
                 if (isset($uriArray[2]) && preg_match("~users/\d*$~", $uri)) {
-                    $id = $uriArray[2];
                     $controllerObject = new UserController();
-                    $controllerObject->delete($id);
+                    $controllerObject->delete();
                     break;
                 }
 
@@ -67,12 +66,6 @@ class Router
                     $id = $uriArray[3];
                     $controllerObject = new UserController();
                     $controllerObject->update($id);
-                    break;
-                }
-
-                if (isset($uriArray[2]) && preg_match("~users/delete~", $uri)) {
-                    $controllerObject = new UserController();
-                    $controllerObject->deleteSome();
                     break;
                 }
 
@@ -92,4 +85,3 @@ class Router
         }
     }
 }
-

@@ -9,7 +9,7 @@ use Twig\Loader\FilesystemLoader;
 
 class View
 {
-    protected $twig;
+    protected Environment $twig;
 
     public function __construct()
     {
@@ -17,8 +17,8 @@ class View
         $this->twig = new Environment($loader, ['auto_reload' => true]);
     }
 
-    public function render(string $template, array $data = []): string
+    public function render(string $template, array $data = [])
     {
-        return $this->twig->render($template, $data);
+        $this->twig->display($template, $data);
     }
 }

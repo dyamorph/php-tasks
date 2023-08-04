@@ -1,8 +1,12 @@
 {% extends 'layout/base.twig' %}
 
+{% block title %}
+    Edit user info
+{% endblock %}
+
 {% block content %}
     <form class="update-form col-sm-12 col-md-12 col-lg-6 py-5" action="/users/update/{{ id }}" method="POST">
-        <h3 class="h2 mb-5">Update user</h3>
+        <h3 class="mb-5">Update user</h3>
         <div class="form-group">
             <label for="name">Your first and last name</label>
             <input id="name" class="form-input form-control" type="text" name="name"
@@ -36,4 +40,7 @@
         </div>
         <button class="btn btn-primary update-btn" type="submit">Update</button>
     </form>
+{% endblock %}
+{% block javascript %}
+<script src="../../assets/js/form-validation.js"></script>
 {% endblock %}

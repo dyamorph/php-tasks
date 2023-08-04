@@ -7,110 +7,108 @@ namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
-use app\models\UserModel;
+use app\core\Session;
+use app\interfaces\IDataProvider;
+use app\models\User;
+use app\providers\ApiProvider;
+use app\providers\DatabaseProvider;
 use app\UserValidator;
 
 class UserController extends Controller
 {
-    public UserModel $userModel;
+    public User $user;
     public Request $request;
     public UserValidator $userValidator;
     public Response $response;
+    public IDataProvider $provider;
+    public Session $session;
 
     public function __construct()
     {
         parent::__construct();
-        $this->userModel = new UserModel();
         $this->request = new Request();
+        $this->session = new Session();
+        $this->provider = $this->session->get('data-source') === 'local'
+            ? new DatabaseProvider()
+            : new ApiProvider();
+        $this->user = new User($this->provider);
         $this->userValidator = new UserValidator();
         $this->response = new Response();
     }
 
     public function index(): void
     {
-        echo $this->view->render('new.twig');
-    }
-
-    public function create(): void
-    {
-        $data = $this->request->getBody();
-        $this->userValidator->loadData($data);
-        if (!$this->userValidator->validate()) {
-            echo $this->view->render(
-                'new.twig',
-                [
-                    'data'   => $data,
-                    'errors' => $this->userValidator->errors
-                ]
-            );
-        } else {
-            $name = $data['name'];
-            $email = $data['email'];
-            $gender = $data['gender'];
-            $status = $data['status'];
-
-            $this->userModel->set(
-                'users',
-                ['name', 'email', 'gender', 'status'],
-                [$name, $email, $gender, $status]
-            );
-            $this->response->redirect("/users");
-        }
+        $this->view->render('user/create.twig');
     }
 
     public function show(): void
     {
-        $results = $this->userModel->getAll('users', '*');
-        $totalUsers = count($results);
+        $request = $this->request->getBody();
         $limit = 10;
-        $offset = 0;
-        $pages = ceil($totalUsers / $limit);
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'] - 1;
-            $offset = $page * $limit;
-        }
-        $limitResults = $this->userModel->getWithLimit('users', "*", $limit, $offset);
-        echo $this->view->render(
-            'show.twig',
+
+        $page = $request['page'] - 1;
+
+        $users = $this->user->withLimit($page, $limit);
+
+        $this->view->render(
+            '/user/index.twig',
             [
-                'results'    => $limitResults,
-                'totalUsers' => $totalUsers,
-                'pages'      => $pages,
+                'users' => $users,
+                'totalUsers' => count($this->user->all()),
+                'totalPages' => ceil(count($this->user->all()) / $limit),
             ]
         );
     }
 
-    public function delete(string $id): void
+    public function create(): void
     {
-        if ($this->userModel->delete('users', $id) === true) {
-            $this->response->redirect('/users');
-        } else {
-            $this->response->message('Error while deleting');
+        $request = $this->request->getBody();
+        $this->userValidator->loadData($request);
+
+        if (!$this->userValidator->validate()) {
+            $this->view->render(
+                'user/create.twig',
+                [
+                    'user' => $request,
+                    'errors' => $this->userValidator->errors
+                ]
+            );
+        }
+
+        $this->user->create($request);
+
+        if ($this->userValidator->validate()) {
+            $this->response->redirect('/users?page=1');
         }
     }
 
-    public function deleteSome(): void
+    public function delete(): void
     {
-        $data = $this->request->getBody();
-        foreach ($data['ids'] as $id) {
-            if ($this->userModel->delete('users', $id) !== true) {
-                $this->response->message('Error while deleting');
-            }
+        $request = $this->request->getBody();
+        $ids = $request['ids'];
+        if (!is_array($ids)) {
+            $ids = [$ids];
         }
-        $this->response->redirect('/users');
+
+        foreach ($ids as $id) {
+            $this->user->delete($id);
+        }
+
+        $this->response->redirect('/users?page=1');
     }
 
     public function edit(string $id): void
     {
-        $results = $this->userModel->getOne('users', ['*'], 'id', $id);
-        echo $this->view->render(
-            'edit.twig',
+        $user = $this->user->first($id);
+
+        $this->view->render(
+            'user/edit.twig',
             [
-                'id'     => $results[0]['id'],
-                'name'   => $results[0]['name'],
-                'email'  => $results[0]['email'],
-                'gender' => $results[0]['gender'],
-                'status' => $results[0]['status']
+                'id'     => $user['id'],
+                'name'   => $user['name'],
+                'email'  => $user['email'],
+                'gender' => $user['gender'],
+                'status' => $user['status']
             ]
         );
     }
@@ -119,18 +117,8 @@ class UserController extends Controller
     {
         $request = $this->request->getBody();
 
-        $name = $request['name'];
-        $email = $request['email'];
-        $gender = $request['gender'];
-        $status = $request['status'];
+        $this->user->update($request, $id);
 
-        $this->userModel->update(
-            'users',
-            ['name', 'email', 'gender', 'status'],
-            [$name, $email, $gender, $status],
-            'id',
-            $id
-        );
-        $this->response->redirect('/users');
+        $this->response->redirect('/users?page=1');
     }
 }
