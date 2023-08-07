@@ -3,7 +3,8 @@
   "require": {
     "twig/twig": "^3.6",
     "ext-curl": "*",
-    "ext-mysqli": "*"
+    "ext-mysqli": "*",
+    "zircote/swagger-php": "^4.7"
   },
   "autoload": {
     "psr-4": {
