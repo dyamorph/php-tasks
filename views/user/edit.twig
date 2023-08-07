@@ -7,7 +7,7 @@
 {% block content %}
     <form class="update-form col-sm-12 col-md-12 col-lg-6 py-5" action="/users/update/{{ id }}" method="POST">
         <h3 class="mb-5">Update user</h3>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="name">Your first and last name</label>
             <input id="name" class="form-input form-control" type="text" name="name"
                    placeholder="Enter your first and last name"
@@ -15,14 +15,14 @@
                    value="{{ name }}">
             <div class="invalid-feedback"></div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="email">Enter your email</label>
             <input id="email" class="form-input form-control" type="text" name="email"
                    placeholder="Enter your email"
                    data-email="email" value="{{ email }}">
             <div class="invalid-feedback"></div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="gender">Gender</label>
             <select id="gender" class="form-control" name="gender" data-gender="gender">
                 <option {{ gender == "male" ? "selected" : '' }} value="male">Male</option>
@@ -30,7 +30,7 @@
             </select>
             <div class="invalid-feedback"></div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="status">Status</label>
             <select id="status" class="form-control" name="status" data-status="status">
                 <option {{ status == "active" ? "selected" : '' }} value="active">Active</option>
@@ -41,6 +41,7 @@
         <button class="btn btn-primary update-btn" type="submit">Update</button>
     </form>
 {% endblock %}
+
 {% block javascript %}
-<script src="../../assets/js/form-validation.js"></script>
+<script src="../../assets/build/form.js"></script>
 {% endblock %}

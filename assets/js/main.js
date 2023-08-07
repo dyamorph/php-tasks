@@ -1,3 +1,6 @@
+import '../css/main.scss';
+import "bootstrap";
+
 const deleteBtns = document.querySelectorAll(".delete-btn");
 const deleteForms = document.querySelectorAll("#delete");
 const paginationItems = document.querySelectorAll(".page-item");
