@@ -46,7 +46,11 @@ class UserController extends Controller
         $request = $this->request->getBody();
         $limit = 10;
 
-        $page = $request['page'] - 1;
+        if (isset($request['page'])) {
+            $page = $request['page'] - 1;
+        } else {
+            $page = 0;
+        }
 
         $users = $this->user->withLimit($page, $limit);
 
