@@ -17,7 +17,7 @@ class View
         $this->twig = new Environment($loader, ['auto_reload' => true]);
     }
 
-    public function render(string $template, array $data = [])
+    public function render(string $template, array $data = []): void
     {
         $this->twig->display($template, $data);
     }

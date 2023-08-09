@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="table-responsive mt-5">
-        <h5 class="mb-5 pl-1">Total users: {{ totalUsers }}</h5>
+        <h5 class="mb-5">Total users: {{ totalUsers }}</h5>
         <form id="delete-all" class="table-form" action="/users/" method="POST"></form>
         <button form="delete-all" class="btn btn-danger delete-all-btn" type="submit">Delete All</button>
         <table class="table table-hover">
@@ -60,5 +60,4 @@
         </nav>
     </div>
 {% endblock %}
-{% block javascript %}
-{% endblock %}
+{% block javascript %}{% endblock %}

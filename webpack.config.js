@@ -3,7 +3,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-    mode: "production",
+    mode: 'development',
     entry: {
         main: './assets/js/main.js',
         form: './assets/js/form-validation.js',
@@ -37,19 +37,12 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: /(node_modules)/,
                 use: {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env'],
                     },
-                },
-            },
-            {
-                test: require.resolve('jquery'),
-                loader: 'expose-loader',
-                options: {
-                    exposes: ['$', 'jQuery'],
                 },
             },
         ],

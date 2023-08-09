@@ -23,9 +23,11 @@ class AppController extends Controller
     public function index(): void
     {
         $request = $this->request->getBody();
-        if (isset($request['data-source']) && in_array($request['data-source'], ['local', 'gorest'])) {
+
+        if (isset($request['data-source'])) {
             $this->session->set('data-source', $request['data-source']);
         }
+
         $this->view->render('index.twig', ['dataSource' => $this->session->get('data-source')]);
     }
 }
