@@ -6,7 +6,7 @@ use app\interfaces\IDataProvider;
 use app\providers\ApiProvider;
 use PHPUnit\Framework\TestCase;
 
-class ApiTest extends TestCase
+class ApiProviderTest extends TestCase
 {
     private IDataProvider $apiProvider;
 
