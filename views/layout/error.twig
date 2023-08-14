@@ -1,0 +1,12 @@
+{% extends "layout/base.twig" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block content %}
+    <h4>Error</h4>
+    <p>{{ errorMessage }}</p>
+    <p>Return to the main page:</p>
+    <a class="btn btn-primary" href="/">Main page</a>
+{% endblock %}

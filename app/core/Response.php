@@ -4,13 +4,14 @@ namespace app\core;
 
 class Response
 {
-    public function redirect($url): void
+    public function redirect(string $location): View
     {
-        header("Location: $url");
+        header("Location: $location");
+        exit();
     }
 
-    public function message($message): void
+    public function message(string $message): string
     {
-        echo $message;
+        return $message;
     }
 }

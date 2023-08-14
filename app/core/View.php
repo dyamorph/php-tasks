@@ -14,11 +14,12 @@ class View
     public function __construct()
     {
         $loader = new FilesystemLoader(__DIR__ . '/../../views');
-        $this->twig = new Environment($loader, ['auto_reload' => true]);
+        $this->twig = new Environment($loader, ['auto_reload' => true, 'autoescape' => false]);
     }
 
-    public function render(string $template, array $data = []): void
+    public function render(string $template, array $data = []): View
     {
         $this->twig->display($template, $data);
+        return $this;
     }
 }

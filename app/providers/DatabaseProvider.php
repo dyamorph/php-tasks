@@ -8,48 +8,52 @@ use app\interfaces\IDataProvider;
 
 class DatabaseProvider implements IDataProvider
 {
-    public Database $database;
-    public Request $request;
+    private Database $database;
+    private string $table;
+    private string $fields;
+    private string $where;
 
-    public function __construct()
+    public function __construct(string $table, string $fields, string $where)
     {
-        $this->request = new Request();
         $this->database = Database::getInstance();
+        $this->table = $table;
+        $this->fields = $fields;
+        $this->where = $where;
     }
 
     public function first(string $id)
     {
-        $user = $this->database->get('users', '*', 'id', $id, null, null);
+        $user = $this->database->get($this->table, $this->fields, $this->where, $id, null, null);
         return $user[0];
     }
 
     public function all(): bool | array | null
     {
-        return $this->database->get('users', '*', null, null, null, null);
+        return $this->database->get($this->table, $this->fields, null, null, null, null);
     }
 
     public function withLimit(int $page, int $limit): bool | array | null
     {
         $offset = $page * $limit;
-        return $this->database->get('users', '*', null, null, $limit, $offset);
+        return $this->database->get($this->table, $this->fields, null, null, $limit, $offset);
     }
 
     public function create(array $data): bool | array | null
     {
         $fields = array_keys($data);
         $values = array_values($data);
-        return $this->database->set('users', $fields, $values);
+        return $this->database->set($this->table, $fields, $values);
     }
 
     public function update(array $data, string $id): bool | array | null
     {
         $fields = array_keys($data);
         $values = array_values($data);
-        return $this->database->update('users', $fields, $values, 'id', $id);
+        return $this->database->update($this->table, $fields, $values, $this->where, $id);
     }
 
     public function delete(string $id): bool | array | null
     {
-        return $this->database->delete('users', $id);
+        return $this->database->delete($this->table, $id);
     }
 }

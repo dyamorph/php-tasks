@@ -17,10 +17,10 @@ class AppController extends Controller
     {
         parent::__construct();
         $this->request = new Request();
-        $this->session = new Session();
+        $this->session = Session::getInstance();
     }
 
-    public function index(): void
+    public function index()
     {
         $request = $this->request->getBody();
 
@@ -28,6 +28,6 @@ class AppController extends Controller
             $this->session->set('data-source', $request['data-source']);
         }
 
-        $this->view->render('index.twig', ['dataSource' => $this->session->get('data-source')]);
+        return $this->view->render('index.twig', ['dataSource' => $this->session->get('data-source')]);
     }
 }

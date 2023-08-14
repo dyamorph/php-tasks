@@ -2,6 +2,7 @@
 
 namespace app\providers;
 
+use app\core\CurlClient;
 use app\interfaces\IDataProvider;
 use OpenApi\Annotations as OA;
 
@@ -24,8 +25,6 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="gender", type="string"),
  *     @OA\Property(property="status", type="string"),
  * )
- * /**
- * /**
  * @OA\SecurityScheme(
  *   securityScheme="token",
  *   type="apiKey",
@@ -35,12 +34,16 @@ use OpenApi\Annotations as OA;
  */
 class ApiProvider implements IDataProvider
 {
-    public string $baseUrl = "https://gorest.co.in/public/v2/users";
-    public array $headers = [
-        "Accept: application/json",
-        "Content-Type: application/json",
-        "Authorization: Bearer 91c0714d833bc0830a709ccdbf6135d7b515a8de33e2f30db58bdc18fdcc5426"
-    ];
+    private string $baseUrl;
+    private array $headers;
+    private CurlClient $curl;
+
+    public function __construct($baseUrl, $headers)
+    {
+        $this->headers = $headers;
+        $this->baseUrl = $baseUrl;
+        $this->curl = new CurlClient();
+    }
 
     /**
      * Get a single user by ID
@@ -83,22 +86,11 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl . "/$id";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        $firstUser = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-
-        curl_close($ch);
-
-        return $firstUser;
+        return json_decode($this->curl->execute(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -119,23 +111,11 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-
-        curl_close($ch);
-
-        return $users;
+        return json_decode($this->curl->execute(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -170,22 +150,11 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl . "?page=$page&per_page=$limit";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        $users = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-
-        curl_close($ch);
-
-        return $users;
+        return json_decode($this->curl->execute(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -224,22 +193,17 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->setOptions(
+            [
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
+            ]
+        );
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        curl_close($ch);
-
-        return $response;
+        return $this->curl->execute();
     }
 
     /**
@@ -287,22 +251,17 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl . "/$id";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_THROW_ON_ERROR));
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->setOptions(
+            [
+                CURLOPT_CUSTOMREQUEST => "PATCH",
+                CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
+            ]
+        );
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        curl_close($ch);
-
-        return $response;
+        return $this->curl->execute();
     }
 
     /**
@@ -340,20 +299,15 @@ class ApiProvider implements IDataProvider
     {
         $url = $this->baseUrl . "/$id";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        $this->curl->setUrl($url);
+        $this->curl->setHeaders($this->headers);
+        $this->curl->setOptions(
+            [
+                CURLOPT_CUSTOMREQUEST => "DELETE",
+            ]
+        );
+        $this->curl->close();
 
-        $response = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return "cURL Error: " . curl_error($ch);
-        }
-
-        curl_close($ch);
-
-        return $response;
+        return $this->curl->execute();
     }
 }
