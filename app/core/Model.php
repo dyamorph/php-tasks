@@ -8,13 +8,11 @@ use app\interfaces\IDataProvider;
 
 class Model
 {
-    public Request $request;
     public IDataProvider $dataProvider;
 
     public function __construct(IDataProvider $dataProvider)
     {
         $this->dataProvider = $dataProvider;
-        $this->request = new Request();
     }
 
     public function all()

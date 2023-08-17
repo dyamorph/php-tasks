@@ -11,8 +11,8 @@ use app\core\Session;
 use app\core\View;
 use app\interfaces\IDataProvider;
 use app\models\User;
-use app\providers\ApiProvider;
-use app\providers\DatabaseProvider;
+use app\providers\UserApiProvider;
+use app\providers\UserDatabaseProvider;
 use app\UserValidator;
 
 class UserController extends Controller
@@ -30,15 +30,8 @@ class UserController extends Controller
         $this->request = new Request();
         $this->session = Session::getInstance();
         $this->provider = $this->session->get('data-source') === 'local'
-            ? new DatabaseProvider('users', '*', 'id')
-            : new ApiProvider(
-                'https://gorest.co.in/public/v2/users',
-                [
-                    "Accept: application/json",
-                    "Content-Type: application/json",
-                    "Authorization: Bearer 91c0714d833bc0830a709ccdbf6135d7b515a8de33e2f30db58bdc18fdcc5426"
-                ]
-            );
+            ? new UserDatabaseProvider()
+            : new UserApiProvider();
         $this->user = new User($this->provider);
         $this->validator = new UserValidator();
         $this->response = new Response();
@@ -61,7 +54,7 @@ class UserController extends Controller
 
         $users = $this->user->withLimit($page, $limit);
 
-        if (!isset($users) && count($users) === 0) {
+        if (!isset($users) || count($users) === 0) {
             return $this->view->render(
                 '/layout/error.twig',
                 [

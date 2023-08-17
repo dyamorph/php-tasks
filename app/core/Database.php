@@ -75,7 +75,7 @@ class Database
             return $this->query($sql);
         }
 
-        return null;
+        return true;
     }
 
     public function update(

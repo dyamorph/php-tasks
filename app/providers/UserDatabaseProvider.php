@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace app\providers;
 
 use app\core\Database;
-use app\interfaces\IDataProvider;
 
-class DatabaseProvider implements IDataProvider
+class UserDatabaseProvider extends DatabaseProvider
 {
     private Database $database;
-    protected string $table;
-    protected string $fields;
-    protected string $where;
 
-    public function __construct(string $table, string $fields, string $where)
+    public function __construct()
     {
+        parent::__construct('users', '*', 'id');
         $this->database = Database::getInstance();
-        $this->table = $table;
-        $this->fields = $fields;
-        $this->where = $where;
     }
 
     public function first(string $id): bool | array | null

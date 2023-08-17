@@ -6,7 +6,7 @@ namespace app\core;
 
 class CurlClient
 {
-    private $ch;
+    private \CurlHandle $ch;
 
     public function __construct()
     {
