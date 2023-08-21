@@ -19,13 +19,11 @@ class ApiClient
 
     public function get(string $id = null, int $page = null, int $limit = null): mixed
     {
-        if (isset($id)) {
-            $url = $this->baseUrl . "/$id";
-        } elseif (isset($page, $limit)) {
-            $url = $this->baseUrl . "?page=$page&per_page=$limit";
-        } else {
-            $url = $this->baseUrl;
-        }
+        $url = match (true) {
+            isset($id) => $this->baseUrl . "/$id",
+            isset($page, $limit) => $this->baseUrl . "?page=$page&per_page=$limit",
+            default => $this->baseUrl,
+        };
 
         $this->curl->setUrl($url);
         $this->curl->setHeaders($this->headers);
@@ -38,12 +36,10 @@ class ApiClient
     {
         $this->curl->setUrl($this->baseUrl);
         $this->curl->setHeaders($this->headers);
-        $this->curl->setOptions(
-            [
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
-            ]
-        );
+        $this->curl->setOptions([
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
+        ]);
         $this->curl->close();
 
         return $this->curl->execute();
@@ -55,12 +51,10 @@ class ApiClient
 
         $this->curl->setUrl($url);
         $this->curl->setHeaders($this->headers);
-        $this->curl->setOptions(
-            [
-                CURLOPT_CUSTOMREQUEST => "PATCH",
-                CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
-            ]
-        );
+        $this->curl->setOptions([
+            CURLOPT_CUSTOMREQUEST => "PATCH",
+            CURLOPT_POSTFIELDS    => json_encode($data, JSON_THROW_ON_ERROR)
+        ]);
         $this->curl->close();
 
         return $this->curl->execute();
@@ -72,11 +66,9 @@ class ApiClient
 
         $this->curl->setUrl($url);
         $this->curl->setHeaders($this->headers);
-        $this->curl->setOptions(
-            [
-                CURLOPT_CUSTOMREQUEST => "DELETE",
-            ]
-        );
+        $this->curl->setOptions([
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+        ]);
         $this->curl->close();
 
         return $this->curl->execute();

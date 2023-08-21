@@ -25,6 +25,16 @@ class Database
         }
     }
 
+    final public function __clone()
+    {
+        throw new \RuntimeException('Cannot clone singleton.');
+    }
+
+    final public function __wakeup()
+    {
+        throw new \RuntimeException("Cannot unserialize singleton.");
+    }
+
     public static function getInstance(): Database
     {
         if (!self::$instance) {
@@ -53,6 +63,7 @@ class Database
         }
 
         $sql = "SELECT $fields FROM $table";
+
         return $this->query($sql);
     }
 

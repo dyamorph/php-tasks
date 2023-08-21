@@ -15,32 +15,32 @@ class Model
         $this->dataProvider = $dataProvider;
     }
 
-    public function all()
+    public function all(): array
     {
         return $this->dataProvider->all();
     }
 
-    public function first($id)
+    public function first(string $id): array
     {
         return $this->dataProvider->first($id);
     }
 
-    public function withLimit($page, $limit)
+    public function withLimit(int $page, int $limit): array
     {
         return $this->dataProvider->withLimit($page, $limit);
     }
 
-    public function create($data)
+    public function create(array $data): mixed
     {
         return $this->dataProvider->create($data);
     }
 
-    public function update($data, $id)
+    public function update(array $data, string $id): mixed
     {
         return $this->dataProvider->update($data, $id);
     }
 
-    public function delete($id)
+    public function delete(string $id): mixed
     {
         return $this->dataProvider->delete($id);
     }

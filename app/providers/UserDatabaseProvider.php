@@ -19,6 +19,7 @@ class UserDatabaseProvider extends DatabaseProvider
     public function first(string $id): bool | array | null
     {
         $user = $this->database->get($this->table, $this->fields, $this->where, $id);
+
         return $user[0];
     }
 
@@ -30,6 +31,7 @@ class UserDatabaseProvider extends DatabaseProvider
     public function withLimit(int $page, int $limit): bool | array | null
     {
         $offset = $page * $limit;
+
         return $this->database->get($this->table, $this->fields, null, null, $limit, $offset);
     }
 
@@ -37,6 +39,7 @@ class UserDatabaseProvider extends DatabaseProvider
     {
         $fields = array_keys($data);
         $values = array_values($data);
+
         return $this->database->set($this->table, $fields, $values);
     }
 
@@ -44,6 +47,7 @@ class UserDatabaseProvider extends DatabaseProvider
     {
         $fields = array_keys($data);
         $values = array_values($data);
+
         return $this->database->update($this->table, $fields, $values, $this->where, $id);
     }
 

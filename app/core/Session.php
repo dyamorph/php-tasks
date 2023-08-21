@@ -15,6 +15,16 @@ class Session
         }
     }
 
+    final public function __clone()
+    {
+        throw new \RuntimeException('Cannot clone singleton.');
+    }
+
+    final public function __wakeup()
+    {
+        throw new \RuntimeException("Cannot unserialize singleton.");
+    }
+
     public static function getInstance(): Session
     {
         if (self::$instance === null) {
@@ -28,7 +38,7 @@ class Session
         $_SESSION[$key] = $value;
     }
 
-    public function get(string $key, $default = null)
+    public function get(string $key, $default = null): mixed
     {
         return $_SESSION[$key] ?? $default;
     }
